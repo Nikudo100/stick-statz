@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use Carbon\Carbon;
-use App\Models\ReportSetting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\CommandLog;
@@ -16,27 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('wb:parse-feedback')->hourlyAt('15');
-        // $schedule->command('wb:parse-statistics')->hourlyAt('20');
-        // $schedule->command('wb:parse-cards-lists')->hourlyAt('25');
-        // $schedule->command('wb:parse-stocks')->hourlyAt('5');
-        // $schedule->command('wb:parse-orders')->hourlyAt('7');
-        // // доделать команду, тк она затирает коменты
-        // // $schedule->command('wb:add-not-empty-warehouses-to-stocks-fields')->hourlyAt('8');
-        // $schedule->command('wb:parse-sales')
-        // ->hourlyAt('7')
-        // ;
-        // $schedule->command('wb:parse-supplier-orders')->hourlyAt('10');
 
-        // // Крон для реалтайм ABC\Turnover
-        // // $currentDateTime = Carbon::now()->format('Y-m-d\TH:i:s');
-        // // $schedule->command("wb:abc_analysis_with_date '{$currentDateTime}' 1")->everyMinute();
-        // // $schedule->command("wb:turnover_with_date '{$currentDateTime}' 1")->everyMinute();
-
-        // ReportSetting::query()->where('is_realtime', 0)->get()->map(function ($x) use($schedule){
-        //     $schedule->command("wb:{$x->slug}")->cron($x->cron);
-        // });
-        $this->scheduleCommand($schedule, 'wb:parse-feedback')->hourlyAt('15');
+        // $this->scheduleCommand($schedule, 'wb:parse-feedback')->hourlyAt('15');
     }
 
     /**

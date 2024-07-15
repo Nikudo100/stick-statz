@@ -64,16 +64,16 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-    cron:
-        image: debian:latest
-        container_name: cron
-        volumes:
-        - ./crontab:/etc/cron.d
-        entrypoint: ["sh", "-c", "apt-get update && apt-get install -y cron && cron -f"]
-        depends_on:
-        - laravel.new
-        networks:
-        - statz
+    # cron:
+    #     image: debian:latest
+    #     container_name: cron
+    #     volumes:
+    #     - ./crontab:/etc/cron.d
+    #     entrypoint: ["sh", "-c", "apt-get update && apt-get install -y cron && cron -f"]
+    #     depends_on:
+    #     - laravel.new
+    #     networks:
+    #     - statz
 networks:
     statz:
         driver: bridge
@@ -82,5 +82,5 @@ volumes:
         driver: local
     sail-redis:
         driver: local
-    sail-cron:
-        driver: local
+    # sail-cron:
+    #     driver: local
