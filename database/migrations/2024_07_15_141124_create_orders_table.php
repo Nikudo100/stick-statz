@@ -39,8 +39,8 @@ return new class extends Migration
             $table->string('sticker');
             $table->string('gNumber');
             $table->string('srid');
-            $table->foreignId('product_id')->constrained();
-            $table->foreignId('warehouse_id')->constrained();
+            // $table->foreignId('product_id')->constrained();
+            // $table->foreignId('warehouse_id')->constrained();
             $table->timestamps();
         });
     }

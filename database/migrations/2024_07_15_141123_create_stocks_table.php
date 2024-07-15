@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('amount');
             $table->string('sku_external_id');
-            $table->foreignId('warehouse_id')->constrained();
-            $table->foreignId('product_id')->constrained();
             $table->string('name');
             $table->integer('quantityFull');
             $table->integer('in_way_to_client');
@@ -24,6 +22,8 @@ return new class extends Migration
             $table->string('techSize');
             $table->decimal('price', 8, 2);
             $table->integer('discount');
+            // $table->foreignId('warehouse_id')->constrained();
+            // $table->foreignId('product_id')->constrained();
             $table->timestamps();
         });
     }

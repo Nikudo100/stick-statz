@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id')->constrained();
             $table->integer('nmId');
             $table->integer('imtID');
             $table->integer('subjectID');
             $table->string('vendorCode');
-            $table->foreignId('brand_id')->constrained();
             $table->string('title');
             $table->text('description');
             $table->json('dimensions');
@@ -32,7 +30,9 @@ return new class extends Migration
             $table->string('size');
             $table->json('package_size');
             $table->date('end_sale');
-            $table->foreignId('status_id')->constrained();
+            // $table->foreignId('account_id')->constrained();
+            // $table->foreignId('brand_id')->constrained();
+            // $table->foreignId('status_id')->constrained();
         });
     }
 
