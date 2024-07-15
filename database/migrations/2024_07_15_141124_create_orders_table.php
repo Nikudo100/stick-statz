@@ -40,8 +40,8 @@ return new class extends Migration
             $table->string('gNumber');
             $table->string('srid');
             $table->foreignId('product_id')->constrained();
-            $table->timestamps();
             $table->foreignId('warehouse_id')->constrained();
+            $table->timestamps();
         });
     }
 
