@@ -12,19 +12,23 @@ class RoleSeeder extends Seeder
     public function run()
     {
         // Создание роли SuperUser
-        $superUserRole = Role::create(['name' => 'SuperUser']);
+        $superUserRole = Role::create(['name' => 'super-user']);
 
         // Создание пользователя Admin и назначение роли
         $admin = User::create([
             'name' => 'admin',
             'email' => 'admin@mail.ru',
-            'password' => bcrypt('admin'),
+            'password' => bcrypt('admin4'),
+            'phone' => '+79999999999'
         ]);
 
         $admin->assignRole($superUserRole);
 
         // Создание роли User
-        Role::create(['name' => 'User']);
+        Role::create(['name' => 'user']);
+
+        // Создание роли User
+        Role::create(['name' => 'guest']);
     }
 }
 

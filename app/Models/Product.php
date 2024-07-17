@@ -19,4 +19,14 @@ class Product extends Model
     {
         return $this->hasMany(Order::class);
     }
+    
+    public function abcAnalyses()
+    {
+        return $this->hasMany(AbcAnalysis::class);
+    }
+
+    public function turnovers()
+    {
+        return $this->hasMany(Turnover::class);
+    }
 }
