@@ -38,6 +38,7 @@ class ProductService
                         'title' => $productData['title'],
                         'description' => $productData['description'],
                         'dimensions' => $productData['dimensions'],
+                        'video' => $productData['video'],
                     ]
                 );
 

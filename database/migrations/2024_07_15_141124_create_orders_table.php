@@ -6,48 +6,42 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('warehouseName');
-            $table->string('countryName');
-            $table->string('oblastOkrugName');
-            $table->string('regionName');
-            $table->integer('nmId');
-            $table->string('barcode');
-            $table->string('category');
-            $table->string('subject');
-            $table->string('brand');
-            $table->string('techSize');
-            $table->integer('incomeID');
-            $table->boolean('isSupply');
-            $table->boolean('isRealization');
-            $table->decimal('totalPrice', 8, 2);
-            $table->integer('discountPercent');
-            $table->decimal('spp', 8, 2);
-            $table->decimal('forPay', 8, 2);
-            $table->decimal('finishedPrice', 8, 2);
-            $table->decimal('priceWithDisc', 8, 2);
-            $table->integer('saleID');
-            $table->boolean('isCancel');
+            $table->string('warehouseName')->nullable();
+            $table->string('countryName')->nullable();
+            $table->string('oblastOkrugName')->nullable();
+            $table->string('regionName')->nullable();
+            $table->integer('nmId')->nullable();
+            $table->string('barcode')->nullable();
+            $table->string('category')->nullable();
+            $table->string('subject')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('techSize')->nullable();
+            $table->integer('incomeID')->nullable();
+            $table->boolean('isSupply')->nullable();
+            $table->boolean('isRealization')->nullable();
+            $table->decimal('totalPrice', 8, 2)->nullable();
+            $table->integer('discountPercent')->nullable();
+            $table->decimal('spp', 8, 2)->nullable();
+            $table->decimal('forPay', 8, 2)->nullable();
+            $table->decimal('finishedPrice', 8, 2)->nullable();
+            $table->decimal('priceWithDisc', 8, 2)->nullable();
+            $table->integer('saleID')->nullable();
+            $table->boolean('isCancel')->nullable();
             $table->dateTime('cancelDate')->nullable();
-            $table->string('orderType');
-            $table->string('sticker');
-            $table->string('gNumber');
-            $table->string('srid');
-            // $table->foreignId('product_id')->constrained();
-            // $table->foreignId('warehouse_id')->constrained();
+            $table->string('orderType')->nullable();
+            $table->string('sticker')->nullable();
+            $table->string('gNumber')->nullable();
+            $table->string('srid')->unique();
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('warehouse_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');
