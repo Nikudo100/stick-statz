@@ -19,7 +19,7 @@ class GetCarts
 
         do {
             $response = $this->getCardsList($cursor);
-
+            
             if ($response && isset($response['cards'])) {
                 $allCards = array_merge($allCards, $response['cards']);
                 $cursor = [
@@ -35,7 +35,7 @@ class GetCarts
         return $allCards;
     }
 
-    public function getCardsList($cursor = null, $filter = ['withPhoto' => -1], $limit = 100)
+    private function getCardsList($cursor = null, $filter = ['withPhoto' => -1], $limit = 100)
     {
         $endpoint = '/content/v2/get/cards/list';
         $url = $this->baseUrl . $endpoint;
@@ -53,12 +53,14 @@ class GetCarts
             $data['settings']['cursor'] = array_merge($data['settings']['cursor'], $cursor);
         }
 
-        $response = Http::withHeaders($this->headers)->post($url, $data);
+        $response = Http::withHeaders($this->headers)
+                        ->timeout(120) // Увеличение тайм-аута до 120 секунд
+                        ->post($url, $data);
 
         if ($response->successful()) {
             return $response->json();
         }
-
+        
         Log::error("Failed to fetch data from WB API", ['response' => $response->body()]);
 
         return null;

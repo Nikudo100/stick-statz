@@ -8,7 +8,54 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['account_id', 'nmId', 'imtID', 'subjectID', 'vendorCode', 'brand_id', 'title', 'description', 'dimensions', 'price', 'article', 'images', 'price_base', 'discount_base', 'barcode', 'size', 'package_size', 'end_sale', 'status_id'];
+
+    protected $fillable = [
+        // Артикул WB
+        'nmID',
+        // Идентификатор КТ.
+        // Артикулы WB из одной КТ будут иметь одинаковый imtID
+        'imtID',
+        // Внутренний технический идентификатор товара
+        'nmUUID',
+        // Артикул продавца
+        'vendorCode',
+        // Бренд
+        'brand',
+        // Наименование товара
+        'title',
+        // Описаниие
+        'description',
+        // Видео
+        'video',
+        // Габариты упаковки товара, см
+        'dimensions'
+    ];
+
+    protected $casts = [
+        'dimensions' => 'array',
+    ];
+
+    // Product artibutes
+    public function photos()
+    {
+        return $this->hasMany(ProductPhoto::class);
+    }
+
+    public function characteristics()
+    {
+        return $this->hasMany(ProductCharacteristic::class);
+    }
+
+    public function sizes()
+    {
+        return $this->hasMany(ProductSize::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(ProductTag::class);
+    }
+    // END Product artibutes
 
     public function stocks()
     {
@@ -19,7 +66,7 @@ class Product extends Model
     {
         return $this->hasMany(Order::class);
     }
-    
+
     public function abcAnalyses()
     {
         return $this->hasMany(AbcAnalysis::class);

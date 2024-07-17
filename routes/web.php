@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/test',[ProfileController::class, 'edit']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

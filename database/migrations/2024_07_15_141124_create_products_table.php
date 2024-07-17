@@ -6,41 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->integer('nmId');
-            $table->integer('imtID');
-            $table->integer('subjectID');
-            $table->string('vendorCode');
-            $table->string('title');
-            $table->text('description');
-            $table->json('dimensions');
-            $table->decimal('price', 8, 2);
-            $table->string('article');
-            $table->json('images');
+            $table->integer('nmID')->unique();
+            $table->integer('imtID')->nullable()->default(0);
+            $table->uuid('nmUUID')->nullable();
+            $table->string('vendorCode')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->json('dimensions')->nullable();
+            $table->text('video')->nullable();
             $table->timestamps();
-            $table->decimal('price_base', 8, 2);
-            $table->integer('discount_base');
-            $table->string('barcode');
-            $table->string('size');
-            $table->json('package_size');
-            $table->date('end_sale');
-            // $table->foreignId('account_id')->constrained();
-            // $table->foreignId('brand_id')->constrained();
-            // $table->foreignId('status_id')->constrained();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('products');
     }
 };
+
