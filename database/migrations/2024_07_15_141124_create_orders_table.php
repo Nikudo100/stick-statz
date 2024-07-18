@@ -35,9 +35,10 @@ return new class extends Migration
             $table->string('orderType')->nullable();
             $table->string('sticker')->nullable();
             $table->string('gNumber')->nullable();
+            $table->string('video')->nullable();
             $table->string('srid')->unique();
-            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('warehouse_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade');
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->onDelete('cascade');
             $table->timestamps();
         });
     }

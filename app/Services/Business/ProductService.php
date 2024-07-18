@@ -12,40 +12,49 @@ use Illuminate\Support\Facades\Log;
 
 class ProductService
 {
+    protected $categoryService;
+
+    public function __construct(ProductCategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
     public function updateOrCreateProducts(array $products)
     {
+        echo 'Кл-во продуктов получено с ВБ: ' . count($products) . PHP_EOL;
+
+        // $cats = [ array_unique(array_column($products, 'subjectID')) => array_unique(array_column($products, 'subjectName')) ];
+
+        // $this->categoryService->updateOrCreateCategories($cats);
+
+        $uniqueSubjectIDs = array_unique(array_column($products, 'subjectID'));
+        $categories = [];
+        foreach ($uniqueSubjectIDs as $key => $subjectID) {
+            $categories[$subjectID] = $products[$key]['subjectName'];
+        }
+        $this->categoryService->updateOrCreateCategories($categories);
 
         foreach ($products as $productData) {
             try {
-                // Проверка наличия subjectID
-                if (isset($productData['subjectID']) && !empty($productData['subjectID'])) {
-                    ProductCategory::updateOrCreate(
-                        ['external_cat_id' => $productData['subjectID']],
-                        ['name' => $productData['subjectName']]
-                    );
-                } else {
-                    Log::error("Missing subjectID in product data", ['data' => $productData]);
-                    continue;
-                }
-
                 $product = Product::updateOrCreate(
                     ['nmID' => $productData['nmID']],
                     [
-                        'imtID' => $productData['imtID'],
-                        'nmUUID' => $productData['nmUUID'],
-                        'vendorCode' => $productData['vendorCode'],
-                        'brand' => $productData['brand'],
-                        'title' => $productData['title'],
-                        'description' => $productData['description'],
-                        'dimensions' => $productData['dimensions'],
-                        'video' => $productData['video'],
+                        'imtID' => $productData['imtID'] ?? 0,
+                        'nmUUID' => $productData['nmUUID'] ?? null,
+                        'subjectID' => $productData['subjectID'] ?? null,
+                        'subjectName' => $productData['subjectName'] ?? null,
+                        'vendorCode' => $productData['vendorCode'] ?? null,
+                        'brand' => $productData['brand'] ?? null,
+                        'title' => $productData['title'] ?? null,
+                        'description' => $productData['description'] ?? null,
+                        'dimensions' => $productData['dimensions'] ?? [],
+                        'video' => $productData['video'] ?? null,
                     ]
                 );
 
-                $this->syncPhotos($product, $productData['photos']);
-                $this->syncCharacteristics($product, $productData['characteristics']);
-                $this->syncSizes($product, $productData['sizes']);
-                $this->syncTags($product, $productData['tags']);
+                $this->syncPhotos($product, $productData['photos'] ?? []);
+                $this->syncCharacteristics($product, $productData['characteristics'] ?? []);
+                $this->syncSizes($product, $productData['sizes'] ?? []);
+                $this->syncTags($product, $productData['tags'] ?? []);
 
             } catch (\Exception $e) {
                 Log::error("Failed to create or update product", [
@@ -60,12 +69,12 @@ class ProductService
     {
         foreach ($photos as $photoData) {
             ProductPhoto::updateOrCreate(
-                ['product_id' => $product->id, 'big' => $photoData['big']],
+                ['product_id' => $product->id, 'big' => $photoData['big'] ?? null],
                 [
-                    'c246x328' => $photoData['c246x328'],
-                    'c516x688' => $photoData['c516x688'],
-                    'square' => $photoData['square'],
-                    'tm' => $photoData['tm'],
+                    'c246x328' => $photoData['c246x328'] ?? null,
+                    'c516x688' => $photoData['c516x688'] ?? null,
+                    'square' => $photoData['square'] ?? null,
+                    'tm' => $photoData['tm'] ?? null,
                 ]
             );
         }
@@ -75,10 +84,10 @@ class ProductService
     {
         foreach ($characteristics as $charData) {
             ProductCharacteristic::updateOrCreate(
-                ['product_id' => $product->id, 'external_char_id' => $charData['id']],
+                ['product_id' => $product->id, 'external_char_id' => $charData['id'] ?? 0],
                 [
-                    'name' => $charData['name'],
-                    'value' => $charData['value'],
+                    'name' => $charData['name'] ?? null,
+                    'value' => $charData['value'] ?? [],
                 ]
             );
         }
@@ -88,11 +97,11 @@ class ProductService
     {
         foreach ($sizes as $sizeData) {
             ProductSize::updateOrCreate(
-                ['product_id' => $product->id, 'external_chrtID' => $sizeData['chrtID']],
+                ['product_id' => $product->id, 'external_chrtID' => $sizeData['chrtID'] ?? 0],
                 [
-                    'techSize' => $sizeData['techSize'],
-                    'wbSize' => $sizeData['wbSize'] ?? '',
-                    'skus' => $sizeData['skus'],
+                    'techSize' => $sizeData['techSize'] ?? null,
+                    'wbSize' => $sizeData['wbSize'] ?? null,
+                    'skus' => $sizeData['skus'] ?? [],
                 ]
             );
         }
@@ -102,10 +111,10 @@ class ProductService
     {
         foreach ($tags as $tagData) {
             ProductTag::updateOrCreate(
-                ['product_id' => $product->id, 'external_tag_id' => $tagData['id']],
+                ['product_id' => $product->id, 'external_tag_id' => $tagData['id'] ?? 0],
                 [
-                    'name' => $tagData['name'],
-                    'color' => $tagData['color'],
+                    'name' => $tagData['name'] ?? null,
+                    'color' => $tagData['color'] ?? null,
                 ]
             );
         }

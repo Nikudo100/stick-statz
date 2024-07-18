@@ -13,7 +13,7 @@ class GetOrders
     {
         $url = $this->baseUrl;
         $headers = [
-            'Authorization' => 'Your-API-Key-Here',
+            'Authorization' => 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMzUwOTgyMywiaWQiOiJlN2Q5ZGNkYi01YjEzLTQxOTktYmM1Mi05YjhjNzQ4ZjU5ZDciLCJpaWQiOjIzMDk2MTM3LCJvaWQiOjc5NzQ2LCJzIjo0MDk0LCJzaWQiOiJlNDRhZTk0ZS03NjVjLTVjMjMtYTZlNC0xYmE4NTY4MzUzNmYiLCJ0IjpmYWxzZSwidWlkIjoyMzA5NjEzN30.dtHHMviZ6QKhYRoBfLw19riROVcmdXhXNlohsPXeFXKUCwLjngIKWbPsLWHWYuuxkvXkrnHlgRj3Ia0UmYZocA',
         ];
 
         $params = [
@@ -22,7 +22,8 @@ class GetOrders
         ];
 
         $response = Http::withHeaders($headers)
-            ->timeout(120)
+            ->timeout(600) // Увеличение времени таймаута до 10 минут
+            ->retry(5, 5000) //
             ->get($url, $params);
 
         if ($response->successful()) {

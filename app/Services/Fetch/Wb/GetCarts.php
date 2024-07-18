@@ -1,5 +1,5 @@
 <?php
-
+    
 namespace App\Services\Fetch\Wb;
 
 use Illuminate\Support\Facades\Http;
@@ -15,22 +15,23 @@ class GetCarts
     public function getAllCards()
     {
         $allCards = [];
-        $cursor = null;
+        $cursor = [
+            'nmID' => null,
+            'updatedAt' => null,
+        ];
 
         do {
             $response = $this->getCardsList($cursor);
-            
+
             if ($response && isset($response['cards'])) {
                 $allCards = array_merge($allCards, $response['cards']);
-                $cursor = [
-                    'nmID' => $response['cursor']['nmID'] ?? null,
-                    'updatedAt' => $response['cursor']['updatedAt'] ?? null,
-                ];
-                $limit = count($response['cards']);
+                $cursor['nmID'] = $response['cursor']['nmID'] ?? null;
+                $cursor['updatedAt'] = $response['cursor']['updatedAt'] ?? null;
+                $total = $response['cursor']['total'];
             } else {
-                $limit = 0;
+                $total = 0;
             }
-        } while ($limit >= 100);
+        } while ($total >= 100);
 
         return $allCards;
     }
@@ -44,23 +45,22 @@ class GetCarts
             'settings' => [
                 'cursor' => [
                     'limit' => $limit,
+                    'nmID' => $cursor['nmID'] ?? null,
+                    'updatedAt' => $cursor['updatedAt'] ?? null,
                 ],
                 'filter' => $filter,
             ],
         ];
 
-        if ($cursor) {
-            $data['settings']['cursor'] = array_merge($data['settings']['cursor'], $cursor);
-        }
-
         $response = Http::withHeaders($this->headers)
-                        ->timeout(120) // Увеличение тайм-аута до 120 секунд
-                        ->post($url, $data);
+            ->timeout(240)
+            ->retry(3, 2000)
+            ->post($url, $data);
 
         if ($response->successful()) {
             return $response->json();
         }
-        
+        echo $response->body();
         Log::error("Failed to fetch data from WB API", ['response' => $response->body()]);
 
         return null;

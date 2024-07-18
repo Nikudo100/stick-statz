@@ -5,7 +5,7 @@ namespace App\Console\Commands\Wb;
 use Illuminate\Console\Command;
 use App\Services\Management\ProductManager;
 
-class SyncProducts extends Command
+class GetProducts extends Command
 {
     protected $signature = 'wb:get-products';
     protected $description = 'Sync products from Wildberries';

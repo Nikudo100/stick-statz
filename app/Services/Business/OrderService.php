@@ -1,32 +1,43 @@
 <?php
-
+    
 namespace App\Services\Business;
 
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
+    protected $warehouseService;
+
+    public function __construct(WarehouseService $warehouseService)
+    {
+        $this->warehouseService = $warehouseService;
+    }
+
     public function updateOrCreateOrders(array $orders)
     {
+        $warehouseNames = array_unique(array_column($orders, 'warehouseName'));
+        $this->warehouseService->updateOrCreateWarehouses($warehouseNames);
+
         foreach ($orders as $orderData) {
             try {
+                $product = Product::where('nmID', $orderData['nmId'])->first();
+                $warehouse = Warehouse::where('name', $orderData['warehouseName'])->first();
+
                 Order::updateOrCreate(
                     ['srid' => $orderData['srid']],
                     [
-                        //@TODO нужно учесть date(создание) и lastChangeDate (изменение)
                         'warehouseName' => $orderData['warehouseName'] ?? null,
                         'countryName' => $orderData['countryName'] ?? null,
                         'oblastOkrugName' => $orderData['oblastOkrugName'] ?? null,
                         'regionName' => $orderData['regionName'] ?? null,
-                        // находить продукт по nmId 
-                        'nmId' => $orderData['nmId'] ?? null,
-                        'product_id' => $orderData['product_id'] ?? null,
-
                         'barcode' => $orderData['barcode'] ?? null,
                         'category' => $orderData['category'] ?? null,
                         'subject' => $orderData['subject'] ?? null,
                         'brand' => $orderData['brand'] ?? null,
+                        'nmID' => $orderData['nmID'] ?? null,
                         'techSize' => $orderData['techSize'] ?? null,
                         'incomeID' => $orderData['incomeID'] ?? null,
                         'isSupply' => $orderData['isSupply'] ?? null,
@@ -43,8 +54,10 @@ class OrderService
                         'orderType' => $orderData['orderType'] ?? null,
                         'sticker' => $orderData['sticker'] ?? null,
                         'gNumber' => $orderData['gNumber'] ?? null,
-                        
-                        'warehouse_id' => $orderData['warehouse_id'] ?? null,
+                        'product_id' => $product ? $product->id : null,
+                        'warehouse_id' => $warehouse ? $warehouse->id : null,
+                        'created_at' => $orderData['date'] ?? now(),
+                        'updated_at' => $orderData['lastChangeDate'] ?? now(),
                     ]
                 );
             } catch (\Exception $e) {

@@ -2,6 +2,7 @@
 
 namespace App\Services\Management;
 
+use Carbon\Carbon;
 use App\Services\Fetch\Wb\GetOrders;
 use App\Services\Business\OrderService;
 
@@ -16,8 +17,11 @@ class OrderManager
         $this->orderService = $orderService;
     }
 
-    public function syncOrders($dateFrom)
+    public function syncOrders($dateFrom = null)
     {
+        if (!$dateFrom){
+            $dateFrom = date("Y-m-d");
+        }
         $orders = $this->getOrders->fetchOrders($dateFrom);
 
         if ($orders) {
