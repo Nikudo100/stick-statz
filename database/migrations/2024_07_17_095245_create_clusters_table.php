@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('clusters', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->json('warehouse_ids');
-            $table->json('order_region_names');
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('sort')->nullable();
+            $table->json('warehouse_ids')->nullable();
+            $table->json('order_region_names')->nullable();
             $table->timestamps();
         });
     }

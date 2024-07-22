@@ -8,7 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Stock extends Model
 {
     use HasFactory;
-    protected $fillable = ['amount', 'sku_external_id', 'warehouse_id', 'product_id', 'name', 'quantityFull', 'in_way_to_client', 'in_way_from_client', 'techSize', 'price', 'discount'];
+
+    protected $fillable = [
+        'amount',
+        'sku_external_id',
+        'supplier_article',
+        'warehouse_name',
+        'warehouse_id',
+        'product_id',
+        'quantityFull',
+        'in_way_to_client',
+        'in_way_from_client',
+        'techSize',
+        'price',
+        'discount'
+    ];
 
     public function product()
     {
@@ -20,3 +34,4 @@ class Stock extends Model
         return $this->belongsTo(Warehouse::class);
     }
 }
+

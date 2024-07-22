@@ -10,7 +10,36 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'warehouseName', 'countryName', 'oblastOkrugName', 'regionName', 'nmId', 'barcode', 'category', 'subject', 'brand', 'techSize', 'incomeID', 'isSupply', 'isRealization', 'totalPrice', 'discountPercent', 'spp', 'forPay', 'finishedPrice', 'priceWithDisc', 'saleID', 'isCancel', 'cancelDate', 'orderType', 'sticker', 'gNumber', 'srid', 'product_id', 'warehouse_id'
+        'warehouseName',
+        'countryName',
+        'oblastOkrugName',
+        'regionName',
+        'nmId',
+        'barcode',
+        'category',
+        'subject',
+        'brand',
+        'techSize',
+        'incomeID',
+        'isSupply',
+        'isRealization',
+        'totalPrice',
+        'discountPercent',
+        'spp',
+        'forPay',
+        'finishedPrice',
+        'priceWithDisc',
+        'saleID',
+        'isCancel',
+        'cancelDate',
+        'orderType',
+        'sticker',
+        'gNumber',
+        'srid',
+        'product_id',
+        'warehouse_id',
+        'created_at',
+        'updated_at'
     ];
 
     public function product()

@@ -18,6 +18,7 @@ class OrderService
 
     public function updateOrCreateOrders(array $orders)
     {
+        echo 'Кл-во заказов получено с ВБ: ' . count($orders) . PHP_EOL;
         $warehouseNames = array_unique(array_column($orders, 'warehouseName'));
         $this->warehouseService->updateOrCreateWarehouses($warehouseNames);
 
@@ -25,7 +26,7 @@ class OrderService
             try {
                 $product = Product::where('nmID', $orderData['nmId'])->first();
                 $warehouse = Warehouse::where('name', $orderData['warehouseName'])->first();
-
+                // echo $orderData['date']. ' srid:'. $orderData['srid'] . PHP_EOL;
                 Order::updateOrCreate(
                     ['srid' => $orderData['srid']],
                     [
@@ -56,8 +57,8 @@ class OrderService
                         'gNumber' => $orderData['gNumber'] ?? null,
                         'product_id' => $product ? $product->id : null,
                         'warehouse_id' => $warehouse ? $warehouse->id : null,
-                        'created_at' => $orderData['date'] ?? now(),
-                        'updated_at' => $orderData['lastChangeDate'] ?? now(),
+                        'created_at' => $orderData['date'],
+                        'updated_at' => $orderData['lastChangeDate'],
                     ]
                 );
             } catch (\Exception $e) {

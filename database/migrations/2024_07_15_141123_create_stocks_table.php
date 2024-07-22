@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount');
-            $table->string('sku_external_id');
-            $table->string('name');
-            $table->integer('quantityFull');
-            $table->integer('in_way_to_client');
-            $table->integer('in_way_from_client');
-            $table->string('techSize');
-            $table->decimal('price', 8, 2);
-            $table->integer('discount');
-            // $table->foreignId('warehouse_id')->constrained();
-            // $table->foreignId('product_id')->constrained();
+            $table->integer('amount')->nullable();
+            $table->string('sku_external_id')->nullable();
+            $table->string('supplier_article')->nullable(); // добавлено для supplierArticle
+            $table->string('warehouse_name')->nullable(); // добавлено для warehouseName
+            $table->integer('quantityFull')->nullable();
+            $table->integer('in_way_to_client')->nullable();
+            $table->integer('in_way_from_client')->nullable();
+            $table->string('techSize')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
+            $table->integer('discount')->nullable();
+            $table->foreignId('warehouse_id')->nullable()->constrained()->onDelete('cascade'); // добавлено для warehouse_id
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade'); // добавлено для product_id
             $table->timestamps();
         });
     }

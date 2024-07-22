@@ -9,7 +9,7 @@ class Cluster extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'warehouse_ids', 'order_region_names'];
+    protected $fillable = ['name', 'slug','sort', 'warehouse_ids', 'order_region_names'];
 
     protected $casts = [
         'warehouse_ids' => 'array',

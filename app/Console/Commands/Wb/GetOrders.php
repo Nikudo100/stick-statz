@@ -7,14 +7,13 @@ use App\Services\Management\OrderManager;
 
 class GetOrders extends Command
 {
-    protected $signature = 'wb:get-orders {dateFrom}';
+    protected $signature = 'wb:get-orders {dateFrom?}';
     protected $description = 'Synchronize orders from Wildberries API';
 
     protected $orderManager;
 
     public function handle(OrderManager $orderManager)
     {
-        dd($this->argument('dateFrom'));
         $this->info("Syncing orders from Wildberries...");
         $dateFrom = $this->argument('dateFrom');
         $orderManager->syncOrders($dateFrom);

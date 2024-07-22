@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+use App\Http\Controllers\ClusterController;
+
+Route::get('/cluster/{slug}', [ClusterController::class, 'show']);
+
 Route::get('/test',[ProfileController::class, 'edit']);
 
 Route::get('/dashboard', function () {
