@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Кластер Развернутый</title>
+<x-app-layout>
     <style>
         table {
             width: 100%;
@@ -16,9 +13,8 @@
             background-color: #f2f2f2;
         }
     </style>
-</head>
-<body>
     <h1>Кластер Развернутый</h1>
+<div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
     <table>
         <thead>
             <tr>
@@ -63,5 +59,6 @@
             @endforeach
         </tbody>
     </table>
-</body>
-</html>
+</div>
+
+</x-app-layout>

@@ -57,8 +57,8 @@ class OrderService
                         'gNumber' => $orderData['gNumber'] ?? null,
                         'product_id' => $product ? $product->id : null,
                         'warehouse_id' => $warehouse ? $warehouse->id : null,
-                        'created_at' => $orderData['date'],
-                        'updated_at' => $orderData['lastChangeDate'],
+                        'date' => $orderData['date'] ?? null,
+                        'lastChangeDate' => $orderData['lastChangeDate'] ?? null,
                     ]
                 );
             } catch (\Exception $e) {

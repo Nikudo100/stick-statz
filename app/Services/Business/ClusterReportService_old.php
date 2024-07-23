@@ -4,76 +4,78 @@ namespace App\Services\Business;
 
 use App\Models\Cluster;
 use App\Models\Product;
+use App\Models\Stock;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ClusterReportService
 {
     public function generateReport($slug)
     {
-        $products = Product::with(['stocks', 'orders'])->get();
+        $products = Product::all(['id', 'vendorCode']);
         $report = [];
 
-        if ($slug === 'main') {
+        if ($slug === 'main' || $slug === 'all') {
             foreach ($products as $product) {
-                $report[] = $this->calculateMainProductData($product);
-            }
-        } elseif ($slug === 'all') {
-            $report['main'] = [];
-            foreach ($products as $product) {
-                $report['main'][] = $this->calculateMainProductData($product);
-            }
+                $productData = [
+                    'vendorCode' => $product->vendorCode,
+                    'main' => $this->calculateProductData($product),
+                ];
 
-            $clusters = Cluster::all();
-            foreach ($clusters as $cluster) {
-                $report[$cluster->slug] = [];
-                foreach ($products as $product) {
-                    $report[$cluster->slug][] = $this->calculateClusterProductData($product, $cluster);
+                if ($slug === 'all') {
+                    $clusters = Cluster::all();
+                    foreach ($clusters as $cluster) {
+                        $productData[$cluster->slug] = $this->calculateProductData($product, $cluster);
+                    }
                 }
+
+                $report[] = $productData;
             }
         } else {
             $cluster = Cluster::where('slug', $slug)->firstOrFail();
             foreach ($products as $product) {
-                $report[] = $this->calculateClusterProductData($product, $cluster);
+                $report[] = [
+                    'vendorCode' => $product->vendorCode,
+                    $slug => $this->calculateProductData($product, $cluster),
+                ];
             }
         }
 
         return $report;
     }
 
-    protected function calculateMainProductData(Product $product)
+    protected function calculateProductData(Product $product, Cluster $cluster = null)
     {
-        return [
-            'vendorCode' => $product->vendorCode,
-            'totalStock' => $product->getTotalStock(),
-            'orders30Days' => $product->getOrdersCountByMonth(),
-            'avgPerDay' => $product->getAvgOrdersPerDay(),
-            'daysToFinish' => $product->getTurnoverByOrders(),
-            'reorder' => $product->getAdditionalOrder(),
+        $data = [
+            'totalStock' => Stock::where('product_id', $product->id)->sum('amount'),
+            'orders30Days' => Order::where('product_id', $product->id)
+                                    ->where('date', '>=', Carbon::now()->subDays(30)->startOfDay())
+                                    ->count(),
         ];
-    }
 
-    protected function calculateClusterProductData(Product $product, Cluster $cluster)
-    {
-        $warehouseIds = $this->getWarehouseIds($cluster->warehouse_ids);
-        $clusterStock = $product->getClusterStock($warehouseIds);
-        $clusterOrders30Days = $product->getClusterOrdersCountByMonth($cluster->order_region_names);
-        $clusterAvgPerDay = $clusterOrders30Days / 30;
-        $clusterDaysToFinish = $clusterAvgPerDay > 0 ? $clusterStock / $clusterAvgPerDay : 0;
-        $clusterReorder = ($clusterAvgPerDay * 45) - $clusterStock;
+        $data['avgPerDay'] = $data['orders30Days'] / 30;
+        $data['daysToFinish'] = $data['avgPerDay'] > 0 ? $data['totalStock'] / $data['avgPerDay'] : 0;
+        $data['reorder'] = ($data['avgPerDay'] * 45) - $data['totalStock'];
 
-        return [
-            'vendorCode' => $product->vendorCode,
-            'totalStock' => $product->getTotalStock(),
-            'orders30Days' => $product->getOrdersCountByMonth(),
-            'avgPerDay' => $product->getAvgOrdersPerDay(),
-            'daysToFinish' => $product->getTurnoverByOrders(),
-            'reorder' => $product->getAdditionalOrder(),
-            'clusterStock' => $clusterStock,
-            'clusterOrders30Days' => $clusterOrders30Days,
-            'clusterAvgPerDay' => $clusterAvgPerDay,
-            'clusterDaysToFinish' => $clusterDaysToFinish,
-            'clusterReorder' => $clusterReorder,
-        ];
+        if ($cluster) {
+            $warehouseIds = $this->getWarehouseIds($cluster->warehouse_ids);
+
+            $data['clusterStock'] = Stock::where('product_id', $product->id)
+                                         ->whereIn('warehouse_id', $warehouseIds)
+                                         ->sum('amount');
+
+            $data['clusterOrders30Days'] = Order::where('product_id', $product->id)
+                                                ->whereIn('regionName', $cluster->order_region_names)
+                                                ->where('date', '>=', Carbon::now()->subDays(30)->startOfDay())
+                                                ->count();
+
+            $data['clusterAvgPerDay'] = $data['clusterOrders30Days'] / 30;
+            $data['clusterDaysToFinish'] = $data['clusterAvgPerDay'] > 0 ? $data['clusterStock'] / $data['clusterAvgPerDay'] : 0;
+            $data['clusterReorder'] = ($data['clusterAvgPerDay'] * 45) - $data['clusterStock'];
+        }
+
+        return $data;
     }
 
     protected function getWarehouseIds(array $warehouseNames)

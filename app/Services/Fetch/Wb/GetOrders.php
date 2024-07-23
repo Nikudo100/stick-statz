@@ -9,8 +9,9 @@ class GetOrders
 {
     protected $baseUrl = 'https://statistics-api.wildberries.ru/api/v1/supplier/orders';
 
-    public function fetchOrders($dateFrom, $flag = 0)
+    public function fetchOrders($dateFrom, $flag = 1)
     {
+        echo 'dateFrom = '. $dateFrom . PHP_EOL;
         $url = $this->baseUrl;
         $headers = [
             'Authorization' => 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMzUwOTgyMywiaWQiOiJlN2Q5ZGNkYi01YjEzLTQxOTktYmM1Mi05YjhjNzQ4ZjU5ZDciLCJpaWQiOjIzMDk2MTM3LCJvaWQiOjc5NzQ2LCJzIjo0MDk0LCJzaWQiOiJlNDRhZTk0ZS03NjVjLTVjMjMtYTZlNC0xYmE4NTY4MzUzNmYiLCJ0IjpmYWxzZSwidWlkIjoyMzA5NjEzN30.dtHHMviZ6QKhYRoBfLw19riROVcmdXhXNlohsPXeFXKUCwLjngIKWbPsLWHWYuuxkvXkrnHlgRj3Ia0UmYZocA',
@@ -22,8 +23,8 @@ class GetOrders
         ];
 
         $response = Http::withHeaders($headers)
-            ->timeout(600) // Увеличение времени таймаута до 10 минут
-            ->retry(5, 5000) //
+            // ->timeout(600) 
+            ->retry(3, 60000) // 3 раза через минуту
             ->get($url, $params);
 
         if ($response->successful()) {

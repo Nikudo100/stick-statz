@@ -21,16 +21,16 @@ class OrderManager
     public function syncOrders($dateFrom = null)
     {
         if (!$dateFrom) {
-            $latestOrder = Order::orderBy('created_at', 'desc')->first();
+            $latestOrder = Order::orderBy('date', 'desc')->first();
             if ($latestOrder) {
-                $dateFrom = Carbon::parse($latestOrder->created_at)->subDays(2)->format('Y-m-d');
+                $dateFrom = Carbon::parse($latestOrder->date)->subDays(3)->format('Y-m-d');
             } else {
                 $dateFrom = '2000-01-01';
             }
         }
-        echo 'Start Fenth Orders';
+        echo 'Start Fenth Orders' . PHP_EOL;
         $orders = $this->getOrders->fetchOrders($dateFrom);
-        echo 'End Fenth Orders';
+        echo 'End Fenth Orders'. PHP_EOL;
         if ($orders) {
             $this->orderService->updateOrCreateOrders($orders);
         }

@@ -37,6 +37,8 @@ return new class extends Migration
             $table->string('gNumber')->nullable();
             $table->string('video')->nullable();
             $table->string('srid')->unique();
+            $table->dateTime('date')->nullable();
+            $table->dateTime('lastChangeDate')->nullable();
             $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade');
             $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->onDelete('cascade');
             $table->timestamps();

@@ -1,21 +1,14 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ClusterController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Http\Controllers\ClusterController;
-
-Route::get('/cluster/{slug}', [ClusterController::class, 'show']);
-
-Route::get('/test',[ProfileController::class, 'edit']);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/clusters/{slug}', [ClusterController::class, 'show'])->name('clusters.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

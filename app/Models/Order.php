@@ -38,8 +38,8 @@ class Order extends Model
         'srid',
         'product_id',
         'warehouse_id',
-        'created_at',
-        'updated_at'
+        'date',
+        'lastChangeDate'
     ];
 
     public function product()

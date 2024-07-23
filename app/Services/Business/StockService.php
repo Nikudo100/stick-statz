@@ -11,6 +11,8 @@ class StockService
 {
     public function updateOrCreateStocks(array $stocks)
     {
+        echo 'Кл-во остатков получено с ВБ: ' . count($stocks) . PHP_EOL;
+
         foreach ($stocks as $stockData) {
             try {
                 $product = Product::where('nmID', $stockData['nmId'])->first();
