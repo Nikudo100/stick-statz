@@ -16,9 +16,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
 
-        $this->scheduleCommand($schedule, 'wb:get-products')->hourlyAt('15');
-        $this->scheduleCommand($schedule, 'wb:get-orders')->hourlyAt('15');
-        $this->scheduleCommand($schedule, 'wb:get-stocks')->hourlyAt('15');
+        // $this->scheduleCommand($schedule, 'wb:get-products')->hourlyAt('15');
+        // $this->scheduleCommand($schedule, 'wb:get-orders')->hourlyAt('15');
+        // $this->scheduleCommand($schedule, 'wb:get-stocks')->hourlyAt('15');
+        $this->scheduleCommand($schedule, 'app:test')->everyMinute();
     }
 
     /**

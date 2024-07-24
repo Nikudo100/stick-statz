@@ -9,7 +9,7 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ClusterReportService
+class ClusterReportServiceOLD
 {
     public function generateReport($slug)
     {
@@ -41,7 +41,7 @@ class ClusterReportService
                 ];
             }
         }
-
+        // dd($report[12]);
         return $report;
     }
 
