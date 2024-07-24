@@ -24,8 +24,6 @@ services:
         depends_on:
             - pgsql
             - redis
-        entrypoint: >
-            /bin/bash -c "cron && php-fpm"
     pgsql:
         image: 'postgres:15'
         ports:
