@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         // $this->scheduleCommand($schedule, 'wb:get-products')->hourlyAt('15');
         // $this->scheduleCommand($schedule, 'wb:get-orders')->hourlyAt('15');
         // $this->scheduleCommand($schedule, 'wb:get-stocks')->hourlyAt('15');
-        $this->scheduleCommand($schedule, 'app:test')->everyMinute();
+        $this->scheduleCommand($schedule, 'app:test')->everySecond();
     }
 
     /**
