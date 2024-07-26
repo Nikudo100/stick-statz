@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 class WbMain extends Command
 {
     protected $signature = 'wb:main';
-    protected $description = 'Rollback all migrations, reseed the database, and run all Wildberries sync commands';
+    protected $description = 'Откатывает все миграции, повторно заполяет базу данных и запускает все команды синхронизации Wildberries';
 
     public function handle()
     {
@@ -24,6 +24,11 @@ class WbMain extends Command
 
             $this->info('Syncing orders from Wildberries...');
             Artisan::call('wb:get-orders');
+            $this->info('Orders synchronized successfully.');
+
+
+            $this->info('Syncing orders from Wildberries...');
+            Artisan::call('wb:get-orders-last-month');
             $this->info('Orders synchronized successfully.');
 
             $this->info('Syncing stocks from Wildberries...');

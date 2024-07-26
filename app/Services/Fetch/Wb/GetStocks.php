@@ -17,7 +17,7 @@ class GetStocks
         $url = $this->baseUrl . '?dateFrom=2000-01-01';
 
         $response = Http::withHeaders($this->headers)
-            // ->timeout(240)
+            ->timeout(240)
             ->retry(3, 2000)
             ->get($url);
 

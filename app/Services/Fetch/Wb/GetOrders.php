@@ -9,7 +9,7 @@ class GetOrders
 {
     protected $baseUrl = 'https://statistics-api.wildberries.ru/api/v1/supplier/orders';
 
-    public function fetchOrders($dateFrom, $flag = 1)
+    public function fetchOrders($dateFrom, $flag = 0)
     {
         echo 'dateFrom = '. $dateFrom . PHP_EOL;
         $url = $this->baseUrl;
@@ -23,7 +23,7 @@ class GetOrders
         ];
 
         $response = Http::withHeaders($headers)
-            // ->timeout(600) 
+            ->timeout(240) 
             ->retry(3, 60000) // 3 раза через минуту
             ->get($url, $params);
 

@@ -53,7 +53,7 @@ class GetCarts
         ];
 
         $response = Http::withHeaders($this->headers)
-            // ->timeout(240)
+            ->timeout(240)
             ->retry(3, 2000)
             ->post($url, $data);
 

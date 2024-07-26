@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Services\Fetch\Wb\GetOrders;
 use App\Services\Business\OrderService;
 use App\Models\Order;
+use App\Jobs\SyncOrdersJob;
 
 class OrderManager
 {
@@ -28,11 +29,27 @@ class OrderManager
                 $dateFrom = '2000-01-01';
             }
         }
-        echo 'Start Fenth Orders' . PHP_EOL;
+        echo 'Start Fetch Orders' . PHP_EOL;
         $orders = $this->getOrders->fetchOrders($dateFrom);
-        echo 'End Fenth Orders'. PHP_EOL;
+        echo 'End Fetch Orders' . PHP_EOL;
         if ($orders) {
             $this->orderService->updateOrCreateOrders($orders);
+        }
+    }
+
+    public function getOrdersLastMonth()
+    {
+        $currentDate = Carbon::now()->startOfDay();
+        $dates = [];
+        //Можно было юзать 30 дней, но взял с запасом
+        for ($i = 0; $i < 33; $i++) {
+            $dates[] = $currentDate->copy()->subDays($i)->format('Y-m-d H:i:s');
+        }
+        dump($dates);
+        foreach ($dates as $index => $date) {
+            $delay = now()->addMinutes($index)->addSeconds($index * 10);
+            echo 'delay: '. $delay . PHP_EOL;
+            SyncOrdersJob::dispatch($date)->delay($delay);
         }
     }
 }

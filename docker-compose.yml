@@ -23,8 +23,14 @@ services:
   scheduler: 
     <<: *base_app
     restart: always
-    command: php artisan schedule:work
+    command: php artisan schedule:work 
     container_name: scheduler_${APP_NAME}
+
+  queuer: 
+    <<: *base_app
+    restart: always
+    command: php artisan queue:work --tries=3
+    container_name: queuer_${APP_NAME}
 
   pgsql:
     image: 'postgres:15'
