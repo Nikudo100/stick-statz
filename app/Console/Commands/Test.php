@@ -27,6 +27,6 @@ class Test extends Command
     public function handle()
     {
         echo 'Test'.PHP_EOL;
-        file_put_contents(__DIR__.'/test.txt', "test\n", FILE_APPEND);
+        // file_put_contents(__DIR__.'/test.txt', "test\n", FILE_APPEND);
     }
 }

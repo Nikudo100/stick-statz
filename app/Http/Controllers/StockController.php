@@ -1,14 +1,16 @@
-<?
-namespace App\Http\Controllers;
+<?php
 
+namespace App\Http\Controllers;
+use App\Services\Business\StockService;
+use Illuminate\Http\Request;
 use App\Models\Stock;
-use App\Http\Resources\StockResource;
 
 class StockController extends Controller
 {
-    public function index()
+    public function show(StockService $service)
     {
-        $stocks = Stock::all();
-        return StockResource::collection($stocks);
+        $stocks = $service->get();
+        dd($stocks);
+        return view('stocks.show', compact('stocks'));
     }
 }

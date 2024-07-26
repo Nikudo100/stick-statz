@@ -10,13 +10,8 @@ use App\Models\CommandLog;
 // Schedule your commands
 app()->booted(function () {
     $schedule = app(Schedule::class);
-    scheduleCommand($schedule, 'app:test')->everySecond();
+    scheduleCommand($schedule, 'app:test')->everyMinute();
 });
-
-
-
-
-
 
 
 /**
