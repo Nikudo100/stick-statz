@@ -28,7 +28,8 @@ class Product extends Model
         // Видео
         'video',
         // Габариты упаковки товара, см
-        'dimensions'
+        'dimensions',
+        'subjectID'
     ];
 
     protected $casts = [
@@ -76,6 +77,11 @@ class Product extends Model
     {
         return $this->hasMany(Turnover::class);
     }
+    public function category()
+    {
+        return $this->hasMany(ProductCategory::class);
+    }
+
 
     // public function getOrdersCountByMonth()
     // {

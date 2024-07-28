@@ -9,7 +9,7 @@ class AbcAnalysis extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'value', 'status'];
+    protected $fillable = ['product_id', 'value', 'status', 'created_at'];
 
     public function product()
     {

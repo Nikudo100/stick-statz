@@ -10,12 +10,16 @@ use App\Models\CommandLog;
 // Schedule your commands
 app()->booted(function () {
     $schedule = app(Schedule::class);
-    scheduleCommand($schedule, 'app:test')->everyMinute();
+    scheduleCommand($schedule, 'wb:get-products')->hourly();
+    scheduleCommand($schedule, 'wb:get-stocks')->hourly();
+    scheduleCommand($schedule, 'wb:get-orders')->hourly();
+    // scheduleCommand($schedule, 'app:test')->everyMinute();
+    // scheduleCommand($schedule, 'wb:create-abc-report')->everyMinute();
 });
 
 
 /**
- * CommandLog to BASE 
+ * Logging Commands to BASE
  *
  * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
  * @param  string  $command

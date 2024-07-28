@@ -8,7 +8,7 @@ use App\Services\Business\OrderService;
 use App\Models\Order;
 use App\Jobs\SyncOrdersJob;
 
-class OrderManager
+class   OrderManager
 {
     protected $getOrders;
     protected $orderService;
@@ -29,8 +29,9 @@ class OrderManager
                 $dateFrom = '2000-01-01';
             }
         }
+        // $nowDate = Carbon::now()->startOfDay();
         echo 'Start Fetch Orders' . PHP_EOL;
-        $orders = $this->getOrders->fetchOrders($dateFrom);
+        $orders = $this->getOrders->fetchOrders($dateFrom, 1);
         echo 'End Fetch Orders' . PHP_EOL;
         if ($orders) {
             $this->orderService->updateOrCreateOrders($orders);
@@ -48,7 +49,7 @@ class OrderManager
         dump($dates);
         foreach ($dates as $index => $date) {
             $delay = now()->addMinutes($index)->addSeconds($index * 10);
-            echo 'delay: '. $delay . PHP_EOL;
+            echo 'delay: ' . $delay . PHP_EOL;
             SyncOrdersJob::dispatch($date)->delay($delay);
         }
     }

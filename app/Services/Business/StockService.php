@@ -34,6 +34,8 @@ class StockService
                         'techSize' => $stockData['techSize'] ?? null,
                         'price' => $stockData['Price'] ?? 0,
                         'discount' => $stockData['Discount'] ?? 0,
+                        'supplier_article' => $stockData['supplierArticle'] ?? null,
+                        'warehouse_name' => $stockData['warehouseName'] ?? null,
                         'product_id' => $product ? $product->id : null,
                         'warehouse_id' => $warehouse ? $warehouse->id : null,
                     ]
@@ -49,84 +51,68 @@ class StockService
 
     public function get()
     {
-        $query = "
-            WITH product_data AS (
-                SELECT
-                    p.id,
-                    p.\"vendorCode\",
-                    p.title,
-                    p.nmID,
-                    pc.name AS category,
-                    (SELECT pp.url FROM product_photos pp WHERE pp.product_id = p.id LIMIT 1) AS image
-                FROM products p
-                LEFT JOIN product_categories pc ON p.subjectID = pc.external_cat_id
-            ),
-            total_stocks AS (
-                SELECT product_id, SUM(amount) AS totalStock
-                FROM stocks
-                GROUP BY product_id
-            ),
-            in_way_to_client AS (
-                SELECT product_id, SUM(in_way_to_client) AS totalInWayToClient
-                FROM stocks
-                GROUP BY product_id
-            ),
-            in_way_from_client AS (
-                SELECT product_id, SUM(in_way_from_client) AS totalInWayFromClient
-                FROM stocks
-                GROUP BY product_id
-            ),
-            warehouse_totals AS (
-                SELECT product_id, warehouse_id, SUM(amount) AS warehouseStock
-                FROM stocks
-                GROUP BY product_id, warehouse_id
+        // Первый запрос для получения общей суммы для каждого продукта
+        $productTotalsQuery = Product::join('stocks', 'products.id', '=', 'stocks.product_id')
+            ->join('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
+            ->select(
+                'products.id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID',
+                'product_categories.name as category',
+                DB::raw('SUM(stocks.amount) as total_amount'),
+                DB::raw('SUM(stocks.in_way_to_client) as in_way_to_client'),
+                DB::raw('SUM(stocks.in_way_from_client) as in_way_from_client')
             )
-            SELECT
-                pd.id,
-                pd.\"vendorCode\",
-                pd.title,
-                pd.nmID,
-                pd.category,
-                pd.image,
-                COALESCE(ts.totalStock, 0) AS totalStock,
-                COALESCE(iw.totalInWayToClient, 0) AS totalInWayToClient,
-                COALESCE(iwf.totalInWayFromClient, 0) AS totalInWayFromClient,
-                wt.warehouse_id,
-                COALESCE(wt.warehouseStock, 0) AS warehouseStock
-            FROM product_data pd
-            LEFT JOIN total_stocks ts ON pd.id = ts.product_id
-            LEFT JOIN in_way_to_client iw ON pd.id = iw.product_id
-            LEFT JOIN in_way_from_client iwf ON pd.id = iwf.product_id
-            LEFT JOIN warehouse_totals wt ON pd.id = wt.product_id
-            WHERE wt.warehouse_id IN (SELECT warehouse_id FROM stocks WHERE amount > 0 GROUP BY warehouse_id)
-            ORDER BY pd.id, wt.warehouse_id
-        ";
-
-        $stocks = DB::select($query);
-
+            ->groupBy(
+                'products.id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID',
+                'product_categories.name'
+            )
+            ->orderBy('total_amount', 'DESC')
+            ->get();
+    
+        // Второй запрос для получения сумм по складам
+        $stockDataQuery = Stock::join('warehouses', 'stocks.warehouse_id', '=', 'warehouses.id')
+            ->select(
+                'stocks.product_id',
+                'warehouses.name as warehouse_name',
+                DB::raw('SUM(stocks.amount) as total_amount')
+            )
+            ->groupBy('stocks.product_id', 'warehouses.name')
+            ->havingRaw('SUM(stocks.amount) > 0')
+            ->get();
+    
         // Обработка результатов для нужного формата на фронте
         $result = [];
-        foreach ($stocks as $stock) {
-            $product_id = $stock->id;
-
-            if (!isset($result[$product_id])) {
-                $result[$product_id] = [
-                    'id' => $stock->id,
-                    'vendorCode' => $stock->vendorCode,
-                    'title' => $stock->title,
-                    'nmId' => $stock->nmID,
-                    'category' => $stock->category,
-                    'image' => $stock->image,
-                    'totalStock' => $stock->totalStock,
-                    'totalInWayToClient' => $stock->totalInWayToClient,
-                    'totalInWayFromClient' => $stock->totalInWayFromClient,
-                    'warehouses' => []
+        foreach ($productTotalsQuery as $product) {
+            $result[$product->id] = [
+                'id' => $product->id,
+                'vendorCode' => $product->vendorCode,
+                'title' => $product->title,
+                'nmID' => $product->nmID,
+                'category' => $product->category,
+                'total_amount' => $product->total_amount,
+                'in_way_to_client' => $product->in_way_to_client,
+                'in_way_from_client' => $product->in_way_from_client,
+                'warehouses' => []
+            ];
+        }
+    
+        foreach ($stockDataQuery as $stock) {
+            if (isset($result[$stock->product_id])) {
+                $result[$stock->product_id]['warehouses'][] = [
+                    'warehouse_name' => $stock->warehouse_name,
+                    'total_amount' => $stock->total_amount
                 ];
             }
-
-            $result[$product_id]['warehouses'][$stock->warehouse_id] = $stock->warehouseStock;
         }
-
-        return array_values($result);
+    
+        $result = array_values($result);
+    
+        return $result;
     }
+    
 }

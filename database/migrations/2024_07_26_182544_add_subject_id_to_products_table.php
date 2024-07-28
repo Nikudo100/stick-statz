@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('subjectID')->nullable()->after('nmUUID');
+            $table->integer('subjectID')->nullable();
         });
     }
 

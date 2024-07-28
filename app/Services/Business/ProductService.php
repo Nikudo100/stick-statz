@@ -41,7 +41,6 @@ class ProductService
                         'imtID' => $productData['imtID'] ?? 0,
                         'nmUUID' => $productData['nmUUID'] ?? null,
                         'subjectID' => $productData['subjectID'] ?? null,
-                        'subjectName' => $productData['subjectName'] ?? null,
                         'vendorCode' => $productData['vendorCode'] ?? null,
                         'brand' => $productData['brand'] ?? null,
                         'title' => $productData['title'] ?? null,
