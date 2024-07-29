@@ -14,12 +14,15 @@ class GetStocks
 
     public function fetchStocks()
     {
-        $url = $this->baseUrl . '?dateFrom=2000-01-01';
+        $url = $this->baseUrl;
+        $params = [
+            'dateFrom' => '2000-01-01'
+        ];
 
         $response = Http::withHeaders($this->headers)
             ->timeout(240)
             ->retry(3, 2000)
-            ->get($url);
+            ->get($url, $params);
 
         if ($response->successful()) {
             return $response->json();

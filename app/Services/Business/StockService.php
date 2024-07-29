@@ -52,29 +52,29 @@ class StockService
     public function get()
     {
         $productTotalsQuery = Product::join('stocks', 'products.id', '=', 'stocks.product_id')
-        ->join('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
-        ->leftJoin(DB::raw('(SELECT DISTINCT ON (product_id) product_id, big FROM product_photos ORDER BY product_id, created_at DESC) as product_photos'), 'products.id', '=', 'product_photos.product_id')
-        ->select(
-            'products.id',
-            'products.vendorCode',
-            'products.title',
-            'products.nmID',
-            'product_categories.name as category',
-            'product_photos.big as img',
-            DB::raw('SUM(stocks.amount) as total_amount'),
-            DB::raw('SUM(stocks.in_way_to_client) as in_way_to_client'),
-            DB::raw('SUM(stocks.in_way_from_client) as in_way_from_client')
-        )
-        ->groupBy(
-            'products.id',
-            'products.vendorCode',
-            'products.title',
-            'products.nmID',
-            'product_categories.name',
-            'product_photos.big'
-        )
-        ->orderBy('total_amount', 'DESC')
-        ->get();
+            ->join('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
+            ->leftJoin(DB::raw('(SELECT DISTINCT ON (product_id) product_id, big FROM product_photos ORDER BY product_id, created_at DESC) as product_photos'), 'products.id', '=', 'product_photos.product_id')
+            ->select(
+                'products.id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID',
+                'product_categories.name as category',
+                'product_photos.big as img',
+                DB::raw('SUM(stocks.amount) as total_amount'),
+                DB::raw('SUM(stocks.in_way_to_client) as in_way_to_client'),
+                DB::raw('SUM(stocks.in_way_from_client) as in_way_from_client')
+            )
+            ->groupBy(
+                'products.id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID',
+                'product_categories.name',
+                'product_photos.big'
+            )
+            ->orderBy('total_amount', 'DESC')
+            ->get();
 
 
         $stockDataQuery = Stock::join('warehouses', 'stocks.warehouse_id', '=', 'warehouses.id')
