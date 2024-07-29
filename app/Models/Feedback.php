@@ -42,6 +42,8 @@ class Feedback extends Model
         'subject_id',
     ];
 
+    protected $casts = ['bables' => 'json'];
+
     function product()
     {
         return $this->belongsTo(Product::class);

@@ -47,7 +47,7 @@ return new class extends Migration {
             $table->string('return_product_orders_date')
                 ->comment('Дата и время, когда на запрос возврата был получен ответ со статус-кодом 200')
                 ->nullable();
-            $table->string('bables')
+            $table->json('bables')
                 ->comment('Список тегов покупателя')
                 ->nullable();
             $table->text('answer')->nullable();
