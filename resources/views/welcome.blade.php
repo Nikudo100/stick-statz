@@ -52,12 +52,12 @@
                                             class="block px-4 py-2 text-black hover:bg-gray-200">
                                             Общий кластер
                                         </a>
-                                        @foreach ($clusters as $cluster)
+                                        {{-- @foreach ($clusters as $cluster)
                                             <a href="{{ url('/clusters/' . $cluster->slug) }}"
                                                 class="block px-4 py-2 text-black hover:bg-gray-200">
                                                 {{ $cluster->name }}
                                             </a>
-                                        @endforeach
+                                        @endforeach --}}
                                     </div>
                                 </div>
                                 <form method="POST" action="{{ route('logout') }}">

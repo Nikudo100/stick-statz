@@ -1,18 +1,19 @@
 <?php
-    
+
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Stringable;
 use Carbon\Carbon;
 use App\Models\CommandLog;
 
+$now = Carbon::now()->startOfDay()->format('Y-m-d');
 
 // Schedule your commands
-app()->booted(function () {
+app()->booted(function () use ($now) {
     $schedule = app(Schedule::class);
     scheduleCommand($schedule, 'wb:get-products')->hourly();
     scheduleCommand($schedule, 'wb:get-stocks')->hourly();
-    scheduleCommand($schedule, 'wb:get-orders')->hourly();
+    scheduleCommand($schedule, "wb:get-orders {$now} 1")->hourly();
     // scheduleCommand($schedule, 'app:test')->everyMinute();
     // scheduleCommand($schedule, 'wb:create-abc-report')->everyMinute();
 });

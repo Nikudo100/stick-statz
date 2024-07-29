@@ -8,8 +8,8 @@ use App\Services\Business\AbcReportService;
 class TestController extends Controller
 {
     public function index(AbcReportService $testS)
-    {   
-        dd($testS->generateReport());
+    {
+        // dd($testS->generateReport()[0]);
         return $testS->generateReport();
     }
 }

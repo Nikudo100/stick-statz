@@ -12,10 +12,8 @@ class StockController extends Controller
     {
         $stocks = $service->get();
         // Создаем массив уникальных складов
-        $uniqueWarehouses = collect($stocks)->flatMap(function ($product) {
-            return $product['warehouses'];
-        })->unique('warehouse_id')->values()->all();
 
-        return view('stocks.show', ['data' => $stocks, 'warehouses' => $uniqueWarehouses]);
+        // dd($stocks['wArr']);
+        return view('stocks.show', ['data' => $stocks['data'], 'warehouses' => $stocks['wArr'],'sum' => $stocks['sum']]);
     }
 }

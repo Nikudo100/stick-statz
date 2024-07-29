@@ -19,19 +19,22 @@ class   OrderManager
         $this->orderService = $orderService;
     }
 
-    public function syncOrders($dateFrom = null)
+    public function syncOrders($dateFrom = null, $flag = 0)
     {
+        // Обдумать получение данных заказов
         if (!$dateFrom) {
-            $latestOrder = Order::orderBy('date', 'desc')->first();
-            if ($latestOrder) {
-                $dateFrom = Carbon::parse($latestOrder->date)->subDays(3)->format('Y-m-d');
-            } else {
-                $dateFrom = '2000-01-01';
-            }
+            $dateFrom = Carbon::now()->subDays(33)->startOfDay();
+            // $latestOrder = Order::orderBy('date', 'desc')->first();
+            // if ($latestOrder) {
+            //     $dateFrom = Carbon::parse($latestOrder->date)->subDays(3)->format('Y-m-d');
+            // } else {
+            //     $dateFrom = '2000-01-01';
+            // }
         }
         // $nowDate = Carbon::now()->startOfDay();
+
         echo 'Start Fetch Orders' . PHP_EOL;
-        $orders = $this->getOrders->fetchOrders($dateFrom, 1);
+        $orders = $this->getOrders->fetchOrders($dateFrom, $flag);
         echo 'End Fetch Orders' . PHP_EOL;
         if ($orders) {
             $this->orderService->updateOrCreateOrders($orders);

@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Services\Business;
 
 use App\Models\AbcAnalysis;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -11,42 +11,29 @@ class AbcReportService
 {
     public function generateReport()
     {
-        // $query = "
-        //     WITH products AS (
-        //         SELECT id, \"vendorCode\" FROM products
-        //     ),
-        //     orders_30_days AS (
-        //         SELECT product_id, COUNT(*) AS orders30Days
-        //         FROM orders
-        //         WHERE product_id IN (SELECT id FROM products)
-        //         AND \"date\" >= NOW() - INTERVAL '30 days'
-        //         GROUP BY product_id
-        //     )
-        //     SELECT
-        //         p.id,
-        //         p.\"vendorCode\",
-        //         COALESCE(o.orders30Days, 0) AS orders30Days,
-        //     FROM products p
-        //     LEFT JOIN orders_30_days o ON p.id = o.product_id
-        // ";
-
-        // $products = DB::select($query);
-        // dd($products);
-
-        $abcData = Order::select('product_id', DB::raw('SUM("priceWithDisc") as total_sales'))
-            ->where('date', '>=', Carbon::now()->subDays(30)->startOfDay())
-            ->groupBy('product_id')
-            // ->orderByDesc('total_sales')
+        $abcData = Product::join('orders', 'products.id', '=', 'orders.product_id')
+            ->select(
+                'products.id as product_id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID',
+                DB::raw('SUM(orders."priceWithDisc") as total_sales')
+            )
+            ->where('orders.date', '>=', DB::raw('DATE_TRUNC(\'day\', NOW()) - INTERVAL \'30 days\''))
+            ->groupBy(
+                'products.id',
+                'products.vendorCode',
+                'products.title',
+                'products.nmID'
+            )
+            ->orderBy(DB::raw('SUM(orders."priceWithDisc")'), 'DESC')
             ->get();
-
-        dd($abcData);
 
         $productCount = $abcData->count();
         $highValue = (int) round($productCount * 0.2, 0);
         $mediumValue = (int) round($productCount * 0.75, 0);
-
         $abcData = $this->assignAbcStatus($abcData, $highValue, $mediumValue, $productCount);
-        dd($abcData);
+
         foreach ($abcData as $data) {
             AbcAnalysis::create([
                 'product_id' => $data['product_id'],
@@ -76,13 +63,15 @@ class AbcReportService
         }
 
         return $items->take($take)->map(function ($i) use ($label) {
+            $total_sales = $i->total_sales ?? 0; // Установите в 0, если значение null
+
             if ($label == 'A') {
-                $label = $this->getAbcStatus($i->total_sales);
+                $label = $this->getAbcStatus($total_sales);
             }
 
             return [
                 'product_id' => $i->product_id,
-                'total_sales' => $i->total_sales,
+                'total_sales' => $total_sales,
                 'status' => $label
             ];
         });
