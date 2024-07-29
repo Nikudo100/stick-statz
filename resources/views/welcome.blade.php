@@ -35,9 +35,18 @@
                     @if (Route::has('login'))
                         <nav class="-mx-3 flex flex-1 justify-end">
                             @auth
-                                <a href="{{ route('stocks.show') }}" class="block px-4 py-2 text-black hover:bg-gray-200">
+                                <a href="{{ route('stocks.show') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
                                     Остатки
                                 </a>
+                                <a href="{{ route('abc.index') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
+                                    ABC
+                                </a>
+                                <a href="{{ route('stocks.show') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
+                                    Обораиваемость
+                                </a>
+                                {{-- <a href="{{ route('abc.index') }}" class="block px-4 py-2 text-black hover:bg-gray-200">
+                                    ABC
+                                </a> --}}
                                 <div class="relative group px-3 py-2 dropdown">
                                     <span
                                         class="rounded-md text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">

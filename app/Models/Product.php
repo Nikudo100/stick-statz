@@ -79,52 +79,6 @@ class Product extends Model
     }
     public function category()
     {
-        return $this->hasMany(ProductCategory::class);
+        return $this->hasMany(ProductCategory::class, 'subjectID', 'external_cat_id');
     }
-
-
-    // public function getOrdersCountByMonth()
-    // {
-    //     $date = now()->subDays(30);
-    //     return $this->orders()->where('created_at', '>=', $date)->count();
-    // }
-
-    // public function getAvgOrdersPerDay()
-    // {
-    //     $ordersCount = $this->getOrdersCountByMonth();
-    //     return $ordersCount / 30;
-    // }
-
-    // public function getTotalStock()
-    // {
-    //     return $this->stocks()->sum('amount');
-    // }
-
-    // public function getTurnoverByOrders()
-    // {
-    //     $avgOrdersPerDay = $this->getAvgOrdersPerDay();
-    //     $totalStock = $this->getTotalStock();
-    //     return $avgOrdersPerDay > 0 ? round($totalStock / $avgOrdersPerDay) : 0;
-    // }
-
-    // public function getAdditionalOrder()
-    // {
-    //     $avgOrdersPerDay = $this->getAvgOrdersPerDay();
-    //     $totalStock = $this->getTotalStock();
-    //     return ceil(($avgOrdersPerDay * 45) - $totalStock);
-    // }
-
-    // public function getClusterStock(array $warehouseIds)
-    // {
-    //     return $this->stocks()->whereIn('warehouse_id', $warehouseIds)->sum('amount');
-    // }
-
-    // public function getClusterOrdersCountByMonth(array $regionNames)
-    // {
-    //     $date = now()->subDays(30);
-    //     return $this->orders()
-    //                 ->whereIn('regionName', $regionNames)
-    //                 ->where('created_at', '>=', $date)
-    //                 ->count();
-    // }
 }

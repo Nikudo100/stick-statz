@@ -14,6 +14,7 @@
         }
     </style>
     <h1>Остатки</h1>
+    <br>
     <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
     <h2>Сумма</h2>
     <table>

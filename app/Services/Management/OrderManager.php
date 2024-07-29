@@ -22,8 +22,9 @@ class   OrderManager
     public function syncOrders($dateFrom = null, $flag = 0)
     {
         // Обдумать получение данных заказов
-        if (!$dateFrom) {
-            $dateFrom = Carbon::now()->subDays(33)->startOfDay();
+        if (blank($dateFrom)) {
+            $dateFrom = Carbon::now()->subDays(33)->startOfDay()->format('Y-m-d\TH:i');
+            echo 'd: '. $dateFrom;
             // $latestOrder = Order::orderBy('date', 'desc')->first();
             // if ($latestOrder) {
             //     $dateFrom = Carbon::parse($latestOrder->date)->subDays(3)->format('Y-m-d');
