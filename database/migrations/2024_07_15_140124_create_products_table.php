@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('dimensions')->nullable();
             $table->text('video')->nullable();
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

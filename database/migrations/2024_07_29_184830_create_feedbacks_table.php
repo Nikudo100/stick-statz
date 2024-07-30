@@ -60,6 +60,7 @@ return new class extends Migration {
             $table->integer('subject_id')->nullable();
             $table->timestamp('answer_at')->nullable();
             $table->foreignId('user_id')->nullable();
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

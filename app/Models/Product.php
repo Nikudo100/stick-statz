@@ -29,7 +29,8 @@ class Product extends Model
         'video',
         // Габариты упаковки товара, см
         'dimensions',
-        'subjectID'
+        'subjectID',
+        'account_id'
     ];
 
     protected $casts = [

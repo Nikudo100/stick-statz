@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('finished_at')->nullable();
             $table->string('status')->nullable();
             $table->text('output')->nullable();
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

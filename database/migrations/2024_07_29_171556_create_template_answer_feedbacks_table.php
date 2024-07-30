@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('answer');
             $table->integer('stars');
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

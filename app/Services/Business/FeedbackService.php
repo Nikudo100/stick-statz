@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 class FeedbackService
 {
-    public function updateOrCreateFeedbacks(array $feedbacks)
+    public function updateOrCreateFeedbacks($account, array $feedbacks)
     {
         foreach ($feedbacks as $feedback) {
             try {
-                $product = Product::where('nmID', $feedback["productDetails"]['nmId'])->first();
-                $productCategory = ProductCategory::where('external_cat_id', $feedback['subjectId'])->first();
+                $product = Product::where('nmID', $feedback["productDetails"]['nmId'])
+                    ->where('account_id', $account->id)
+                    ->first();
+                $productCategory = ProductCategory::where('external_cat_id', $feedback['subjectId'])
+                    ->where('account_id', $account->id)
+                    ->first();
+                    
                 Feedback::updateOrCreate(
                     ['wb_id' => $feedback['id']],
                     [
@@ -43,6 +48,7 @@ class FeedbackService
                         'nm_id' => $feedback["productDetails"]["nmId"] ?? null,
                         'imt_id' => $feedback["productDetails"]["imtId"] ?? null,
                         'subject_id' => $feedback["subjectId"] ?? null,
+                        'account_id' => $account->id
                     ]
                 );
             } catch (\Exception $e) {

@@ -21,7 +21,8 @@ class Stock extends Model
         'in_way_from_client',
         'techSize',
         'price',
-        'discount'
+        'discount',
+        'account_id'
     ];
 
     public function product()

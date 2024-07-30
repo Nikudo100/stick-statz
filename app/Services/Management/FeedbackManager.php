@@ -2,6 +2,7 @@
 
 namespace App\Services\Management;
 
+use App\Models\Account;
 use App\Services\Business\FeedbackService;
 use App\Services\Fetch\Wb\Feedbacks;
 
@@ -18,9 +19,15 @@ class FeedbackManager
 
     public function syncUnansweredFeedbacks()
     {
-        $feedbacks = $this->feedbackFetch->getAllUnansweredFeedbacks();
-        if ($feedbacks) {
-            $this->feedbackService->updateOrCreateFeedbacks($feedbacks);
+        $accounts = Account::whereNotNull('wb_token')->get();
+
+        foreach ($accounts as $key => $account) {
+            $this->feedbackFetch->setToken($account->wb_toke);
+            $feedbacks = $this->feedbackFetch->getAllUnansweredFeedbacks();
+            if ($feedbacks) {
+                $this->feedbackService->updateOrCreateFeedbacks($account, $feedbacks);
+            }
         }
+
     }
 }

@@ -13,6 +13,7 @@ class TemplateAnswerFeedback extends Model
 
     protected $fillable = [
         'answer',
-        'stars'
+        'stars',
+        'account_id'
     ];
 }

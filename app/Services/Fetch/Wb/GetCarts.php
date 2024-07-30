@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Log;
 class GetCarts
 {
     protected $baseUrl = 'https://suppliers-api.wildberries.ru';
-    protected $headers = [
-        'Authorization' => 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMzUwOTgyMywiaWQiOiJlN2Q5ZGNkYi01YjEzLTQxOTktYmM1Mi05YjhjNzQ4ZjU5ZDciLCJpaWQiOjIzMDk2MTM3LCJvaWQiOjc5NzQ2LCJzIjo0MDk0LCJzaWQiOiJlNDRhZTk0ZS03NjVjLTVjMjMtYTZlNC0xYmE4NTY4MzUzNmYiLCJ0IjpmYWxzZSwidWlkIjoyMzA5NjEzN30.dtHHMviZ6QKhYRoBfLw19riROVcmdXhXNlohsPXeFXKUCwLjngIKWbPsLWHWYuuxkvXkrnHlgRj3Ia0UmYZocA',
-    ];
+    protected $headers = [];
+
+    function setToken($token)
+    {
+        $this->headers["Authorization"] = $token;
+    }
 
     public function getAllCards()
     {
@@ -60,7 +63,7 @@ class GetCarts
             return $response->json();
         }
         echo $response->body();
-        Log::error("Failed to fetch data from WB API", ['response' => $response->body()]);
+        Log::error("Failed to fetch carts data from WB API", ['response' => $response->body()]);
 
         return null;
     }

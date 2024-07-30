@@ -41,6 +41,7 @@ return new class extends Migration
             $table->dateTime('lastChangeDate')->nullable();
             $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade');
             $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->onDelete('cascade');
+            $table->foreignId('account_id')->nullable();
             $table->timestamps();
         });
     }

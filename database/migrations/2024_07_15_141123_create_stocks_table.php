@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('discount')->nullable();
             $table->foreignId('warehouse_id')->nullable()->constrained()->onDelete('cascade'); // добавлено для warehouse_id
             $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade'); // добавлено для product_id
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

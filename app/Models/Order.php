@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +37,7 @@ class Order extends Model
         'gNumber',
         'srid',
         'product_id',
+        'account_id',
         'warehouse_id',
         'date',
         'lastChangeDate'

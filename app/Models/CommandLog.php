@@ -15,5 +15,6 @@ class CommandLog extends Model
         'finished_at',
         'status',
         'output',
+        'account_id'
     ];
 }

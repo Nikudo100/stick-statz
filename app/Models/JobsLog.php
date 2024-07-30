@@ -9,5 +9,10 @@ class JobsLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['job', 'date', 'status', 'details'];
+    protected $fillable = [
+        'job',
+        'date',
+        'status',
+        'details'
+    ];
 }

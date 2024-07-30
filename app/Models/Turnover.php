@@ -9,7 +9,11 @@ class Turnover extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'value', 'status'];
+    protected $fillable = [
+        'product_id',
+        'value',
+        'status'
+    ];
 
     public function product()
     {

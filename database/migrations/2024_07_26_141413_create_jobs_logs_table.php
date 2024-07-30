@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('date')->nullable();
             $table->string('status')->nullable();
             $table->text('details')->nullable();
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

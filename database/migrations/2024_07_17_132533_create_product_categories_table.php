@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->integer('external_cat_id')->unique();
+            $table->foreignId('account_id');
             $table->timestamps();
         });
     }

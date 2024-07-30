@@ -36,6 +36,7 @@ class Feedback extends Model
         'auto_answer',
         'template_answer_feedback_id',
         'product_id',
+        'account_id',
         'product_category_id',
         'nm_id',
         'imt_id',
