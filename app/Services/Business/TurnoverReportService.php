@@ -9,13 +9,59 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class TurnoverReportService
-{ 
+{
     public function get()
     {
-        return 2;
+        // Получаем все продукты
+        $products = Product::select(
+            'products.id',
+            'products.vendorCode',
+            'products.title',
+            'products.nmID',
+            'product_categories.name as category',
+            'product_photos.big as img'
+            )
+            ->leftJoin('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
+            ->leftJoin('product_photos', function ($join) {
+                $join->on('products.id', '=', 'product_photos.product_id')
+                    ->whereRaw('product_photos.id = (SELECT MIN(id) FROM product_photos WHERE product_photos.product_id = products.id)');
+            })
+            ->join('turnovers', 'products.id', '=', 'turnovers.product_id')
+            // ->orderBy('turnovers.created_at', 'DESC')
+            ->join('abc_analyses', 'products.id', '=', 'abc_analyses.product_id')
+            // ->orderBy('abc_analyses.created_at', 'DESC')
+            ->orderBy('abc_analyses.value', 'DESC')
+            ->get();
+
+        $TurnoverData = Turnover::select('product_id', 'value', 'status', 'created_at')
+            ->orderBy('created_at', 'DESC')
+            // ->orderBy('value', 'DESC')
+            ->get();
+
+        $result = [];
+        foreach ($products as $product) {
+            $productReports = $TurnoverData->where('product_id', $product->id)->mapWithKeys(function ($report) {
+                return [$report->created_at->format('Y-m-d H:i:s') => [
+                    'value' => $report->value,
+                    'status' => $report->status,
+                ]];
+            });
+
+            $result[$product->id] = [
+                'id' => $product->id,
+                'vendorCode' => $product->vendorCode,
+                'title' => $product->title,
+                'nmID' => $product->nmID,
+                'category' => $product->category,
+                'img' => $product->img,
+                'reports' => $productReports,
+            ];
+        }
+
+        return $result;
     }
 
-    public function generateReport()    
+    public function generateReport()
     {
         $query = <<<SQL
         WITH products AS (
@@ -58,10 +104,10 @@ class TurnoverReportService
         LEFT JOIN latest_abc la ON p.id = la.product_id AND la.rn = 1
         ORDER BY orders30Days DESC;
     SQL;
-    
-    $products = DB::select($query);
-    // dd($products);
-    // Turnover::truncate();
+
+        $products = DB::select($query);
+        // dd($products);
+        // Turnover::truncate();
 
         foreach ($products as $data) {
             Turnover::create([
@@ -70,7 +116,6 @@ class TurnoverReportService
                 'status' => $data->status ?? null,
                 'created_at' => Carbon::now()
             ]);
-        }   
+        }
     }
-
 }

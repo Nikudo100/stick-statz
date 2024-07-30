@@ -5,7 +5,9 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\ClusterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AbcReportController;
+use App\Http\Controllers\TurnoverReportController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', [ClusterController::class, 'index'])->name('main');
 

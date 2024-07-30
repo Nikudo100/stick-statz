@@ -13,8 +13,8 @@
                         <th class="px-4 py-2 border-b">Категория</th>
                         @if (!empty($abc) && isset(reset($abc)['reports']))
                             @foreach (reset($abc)['reports'] as $date => $report)
-                                <th class="px-4 py-2 border-b">Значение ({{ $date }})</th>
-                                <th class="px-4 py-2 border-b">Статус ({{ $date }})</th>
+                                <th class="px-4 py-2 border-b">Значение {{ Carbon\Carbon::parse($date)->format('d-m-Y H:i') }}</th>
+                                <th class="px-4 py-2 border-b">Статус {{ Carbon\Carbon::parse($date)->format('d-m-Y H:i') }}</th>
                             @endforeach
                         @endif  
                     </tr>

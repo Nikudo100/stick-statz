@@ -1,63 +1,68 @@
 <x-app-layout>
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <h1>Обораиваемость</h1>
+        <h1 class="text-2xl font-semibold">Обораиваемость</h1>
         <br>
         <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-            <table>
-                <thead>
+            <table class="table-auto w-full border border-gray-200 rounded-lg shadow-sm">
+                <thead class="bg-gray-100 text-gray-600">
                     <tr>
-                        <th>№</th>
-                        <th>Артикул</th>
-                        <th>Картинка</th>
-                        <th>Наименование</th>
-                        <th>Категория</th>
-                        <th>Итог по складам</th>
-                        <th>В пути к клиенту</th>
-                        <th>В пути от клиента</th>
-                        @if (!empty($warehouses))
-                            @foreach ($warehouses as $warehouse)
-                                <th>{{ $warehouse }}</th>
+                        <th class="px-4 py-2 border-b">№</th>
+                        <th class="px-4 py-2 border-b">Артикул</th>
+                        <th class="px-4 py-2 border-b">Картинка</th>
+                        <th class="px-4 py-2 border-b">Наименование</th>
+                        <th class="px-4 py-2 border-b">Категория</th>
+                        @if (!empty($turnover) && isset(reset($turnover)['reports']))
+                            @php
+                                $firstItem = true;
+                            @endphp
+                            @foreach (reset($turnover)['reports'] as $date => $report)
+                                @if ($firstItem)
+                                    <th class="px-4 py-2 border-b">Статус {{ Carbon\Carbon::parse($date)->format('d-m-Y H:i') }}</th>
+                                    @php
+                                        $firstItem = false;
+                                    @endphp
+                                @endif
+                                <th class="px-4 py-2 border-b">Значение {{ Carbon\Carbon::parse($date)->format('d-m-Y H:i') }}</th>
                             @endforeach
                         @endif
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!empty($data))
-                        @foreach ($data as $index => $product)
+                    @php
+                        $index = 0;
+                    @endphp
+                    @if (!empty($turnover))
+                        @foreach ($turnover as $item)
+                            @php
+                                $index++;
+                            @endphp
                             <tr>
-                                <td>{{ (int) $index + 1 }}</td>
-                                <td>{{ $product['vendorCode'] }}</td>
-                                <td><img src="{{ $product['img'] }}" alt=""></td>
-                                <td>{{ $product['title'] }}</td>
-                                <td>{{ $product['category'] }}</td>
-                                <td>{{ $product['total_amount'] }}</td>
-                                <td>{{ $product['in_way_to_client'] }}</td>
-                                <td>{{ $product['in_way_from_client'] }}</td>
-                                @foreach ($warehouses as $warehouse)
-                                    @php
-                                        $warehouseAmount = '';
-                                    @endphp
-                                    @foreach ($product['warehouses'] as $pWarehouse)
-                                        @if ($warehouse == $pWarehouse['warehouse_name'])
-                                            @php
-                                                $warehouseAmount = $pWarehouse['total_amount'];
-                                            @endphp
-                                        @break
+                                <td class="px-4 py-2 border-b">{{ $index }}</td>
+                                <td class="px-4 py-2 border-b">{{ $item['vendorCode'] }}</td>
+                                <td class="px-4 py-2 border-b"><img src="{{ $item['img'] }}" alt="Product Image" width="50"></td>
+                                <td class="px-4 py-2 border-b">{{ $item['title'] }}</td>
+                                <td class="px-4 py-2 border-b">{{ $item['category'] }}</td>
+                                @php
+                                    $firstReport = true;
+                                @endphp
+                                @foreach ($item['reports'] as $date => $report)
+                                    @if ($firstReport)
+                                        <td class="px-4 py-2 border-b">{{ $report['status'] }}</td>
+                                        @php
+                                            $firstReport = false;
+                                        @endphp
                                     @endif
+                                    <td class="px-4 py-2 border-b">{{ $report['value'] }}</td>
                                 @endforeach
-                                <td>{{ $warehouseAmount }}</td>
-                            @endforeach
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="8" class="px-4 py-2 border-b text-center">Нет данных для отображения</td>
                         </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="100%">Нет данных для отображения</td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
+                    @endif
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </x-app-layout>
