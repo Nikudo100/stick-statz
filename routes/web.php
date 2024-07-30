@@ -5,6 +5,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\ClusterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AbcReportController;
+use App\Http\Controllers\AutoAnswerController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TurnoverReportController;
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
+    Route::post('/auto-answer', [AutoAnswerController::class, 'create'])->name('autoAnswer.create');
+    Route::put('/auto-answer/{autoAnswer}', [AutoAnswerController::class, 'update'])->name('autoAnswer.update');
+    Route::delete('/auto-answer/{autoAnswer}', [AutoAnswerController::class, 'create'])->name('autoAnswer.destroy');
 });
 
 require __DIR__ . '/auth.php';

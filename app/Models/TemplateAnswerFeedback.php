@@ -9,6 +9,8 @@ class TemplateAnswerFeedback extends Model
 {
     use HasFactory;
 
+    public $table = 'template_answer_feedbacks';
+
     protected $fillable = [
         'answer',
         'stars'
