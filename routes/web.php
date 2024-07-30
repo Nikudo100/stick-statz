@@ -20,6 +20,7 @@ Route::get('/stocks', [StockController::class, 'show'])->name('stocks.show');
 
 Route::get('/feedbacks', [FeedbackController::class, 'show'])->name('feedbacks.show');
 Route::put('/feedbacks/{feedback}', [FeedbackController::class, 'update'])->name('feedbacks.update');
+Route::put('/feedbacks/{feedback}/auto-answer', [FeedbackController::class, 'autoAnswer'])->name('feedbacks.autoAnswer');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -53,4 +53,25 @@ class Feedbacks
         Log::error("Failed to fetch data feedbacks from WB API", ['response' => $response->body()]);
         return null;
     }
+
+    public function editFeedback($id, $text)
+    {
+        $url = $this->baseUrl . 'feedbacks';
+        $body = [
+            'id' => $id,
+            'text' => $text
+        ];
+
+        $response = Http::withHeaders($this->headers)
+            ->timeout(240)
+            ->retry(3, 2000)
+            ->patch($url, $body);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        Log::error("Failed to edit data feedbacks from WB API", ['response' => $response->body()]);
+        return null;
+    }
 }

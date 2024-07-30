@@ -28,8 +28,22 @@
                                         rows="2" placeholder="Ваш ответ..."></textarea>
                                     <div class="mt-2 flex justify-end">
                                         <button type="submit"
-                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Отправить</button>
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                                            Отправить
+                                        </button>
                                     </div>
+                                    @csrf
+                                    @method('put')
+                                </form>
+                                <form class="mt-4" action="{{ route('feedbacks.autoAnswer', $feedback) }}"
+                                    method="post">
+                                    <div class="mt-2 flex justify-end">
+                                        <button type="submit"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                                            Автоматический ответ
+                                        </button>
+                                    </div>
+
                                     @csrf
                                     @method('put')
                                 </form>
@@ -38,6 +52,9 @@
                                     <h3 class="font-semibold text-lg">{{ $feedback->user?->name }}</h3>
                                     <p class="text-gray-500 text-sm">
                                         {{ Carbon\Carbon::parse($feedback->answer_at)->format('d-m-Y H:i') }}
+                                    </p>
+                                    <p class="text-gray-500 text-sm">
+                                        Автоответ: {{ $feedback->templateAnswerFeedback ? 'Да' : 'Нет' }}
                                     </p>
                                     <p class="mt-2 text-gray-700">{{ $feedback->answer }}</p>
                                 </div>
