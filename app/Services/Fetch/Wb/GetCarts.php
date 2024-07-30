@@ -38,8 +38,7 @@ class GetCarts
 
     private function getCardsList($cursor = null, $filter = ['withPhoto' => -1], $limit = 100)
     {
-        $endpoint = '/content/v2/get/cards/list';
-        $url = $this->baseUrl . $endpoint;
+        $url = $this->baseUrl . '/content/v2/get/cards/list';
 
         $data = [
             'settings' => [

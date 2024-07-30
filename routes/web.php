@@ -5,12 +5,12 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\ClusterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AbcReportController;
-use App\Http\Controllers\TurnoverReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ClusterController::class, 'index'])->name('main');
 
 
+Route::get('/stocks', [StockController::class, 'show'])->name('stocks.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
