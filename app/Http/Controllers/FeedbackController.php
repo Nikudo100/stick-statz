@@ -14,10 +14,10 @@ class FeedbackController extends Controller
     {
     }
 
-    function show()
+    function index()
     {
         $feedbacks = Feedback::whereState('none')->orderByDesc('wb_created_at')->get();
-        return view('feedbacks.show', compact('feedbacks'));
+        return view('feedbacks.index', compact('feedbacks'));
     }
 
     function update(Feedback $feedback, FeedbackRequest $request)
