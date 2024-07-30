@@ -58,6 +58,8 @@ return new class extends Migration {
             $table->integer('nm_id')->nullable();
             $table->integer('imt_id')->nullable();
             $table->integer('subject_id')->nullable();
+            $table->timestamp('answer_at')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }

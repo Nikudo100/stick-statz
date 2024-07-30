@@ -40,9 +40,23 @@ class Feedback extends Model
         'nm_id',
         'imt_id',
         'subject_id',
+        'answer_at',
+        'user_id'
     ];
 
-    protected $casts = ['bables' => 'json'];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'wb_created_at' => 'datetime:d-m-Y  H:i',
+            'answer_at' => 'datetime:d-m-Y H:i',
+            'bables' => 'json'
+        ];
+    }
 
     function product()
     {
@@ -57,5 +71,10 @@ class Feedback extends Model
     function templateAnswerFeedback()
     {
         return $this->belongsTo(TemplateAnswerFeedback::class);
+    }
+
+    function user()
+    {
+        return $this->belongsTo(User::class);    
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\ClusterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AbcReportController;
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ClusterController::class, 'index'])->name('main');
@@ -16,6 +17,9 @@ Route::get('/test', [TestController::class, 'index'])->name('test.index');
 Route::get('/abc', [AbcReportController::class, 'index'])->name('abc.index');
 
 Route::get('/stocks', [StockController::class, 'show'])->name('stocks.show');
+
+Route::get('/feedbacks', [FeedbackController::class, 'show'])->name('feedbacks.show');
+Route::put('/feedbacks/{feedback}', [FeedbackController::class, 'update'])->name('feedbacks.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
