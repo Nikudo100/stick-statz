@@ -20,4 +20,9 @@ class Account extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    function setting()
+    {
+        return $this->hasOne(Setting::class);
+    }
 }

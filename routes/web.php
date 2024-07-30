@@ -6,6 +6,7 @@ use App\Http\Controllers\ClusterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AbcReportController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TurnoverReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/feedbacks', [FeedbackController::class, 'index'])->name('feedbacks.index');
     Route::put('/feedbacks/{feedback}', [FeedbackController::class, 'update'])->name('feedbacks.update');
     Route::put('/feedbacks/{feedback}/auto-answer', [FeedbackController::class, 'autoAnswer'])->name('feedbacks.autoAnswer');
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+
 });
 
 require __DIR__ . '/auth.php';

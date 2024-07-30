@@ -74,7 +74,9 @@
                     <a href="{{ route('feedbacks.index') }}" class="block px-3 py-6 text-black hover:bg-gray-200">
                         Отзывы
                     </a>
-
+                    <a href="{{ route('settings.index') }}" class="block px-3 py-6 text-black hover:bg-gray-200">
+                        Настройки
+                    </a>
                 </div>
             </div>
 

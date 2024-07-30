@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'account_id',
+        'wb_token',
+        'auto_feedback_answer',
+    ];
 }
