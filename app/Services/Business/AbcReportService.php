@@ -37,8 +37,56 @@ class AbcReportService
 
     //     return $abc;
     // }
+    // public function get()
+    // {
+    //     $products = Product::select(
+    //         'products.id',
+    //         'products.vendorCode',
+    //         'products.title',
+    //         'products.nmID',
+    //         'product_categories.name as category',
+    //         'product_photos.big as img'
+    //     )
+    //         ->leftJoin('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
+    //         ->leftJoin('product_photos', function ($join) {
+    //             $join->on('products.id', '=', 'product_photos.product_id')
+    //                 ->whereRaw('product_photos.id = (SELECT MIN(id) FROM product_photos WHERE product_photos.product_id = products.id)');
+    //         })
+    //         ->join('abc_analyses', 'products.id', '=', 'abc_analyses.product_id')
+    //         // ->orderBy('abc_analyses.created_at', 'DESC')
+    //         ->orderBy('abc_analyses.value', 'DESC')
+    //         ->get();
+
+    //     $abcData = AbcAnalysis::select('product_id', 'value', 'status', 'created_at')
+    //         ->orderBy('created_at', 'DESC')
+    //         ->orderBy('value', 'DESC')
+    //         ->get();
+
+    //     $result = [];
+    //     foreach ($products as $product) {
+    //         $productReports = $abcData->where('product_id', $product->id)->mapWithKeys(function ($report) {
+    //             return [$report->created_at->format('Y-m-d H:i:s') => [
+    //                 'value' => $report->value,
+    //                 'status' => $report->status,
+    //             ]];
+    //         });
+
+    //         $result[] = [
+    //             'id' => $product->id,
+    //             'vendorCode' => $product->vendorCode,
+    //             'title' => $product->title,
+    //             'nmID' => $product->nmID,
+    //             'category' => $product->category,
+    //             'img' => $product->img,
+    //             'reports' => $productReports
+    //         ];
+    //     }
+    //     dd($result);
+    //     return $result;
+    // }
     public function get()
     {
+        // Получаем все продукты
         $products = Product::select(
             'products.id',
             'products.vendorCode',
@@ -47,44 +95,54 @@ class AbcReportService
             'product_categories.name as category',
             'product_photos.big as img'
         )
-            ->leftJoin('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
-            ->leftJoin('product_photos', function ($join) {
-                $join->on('products.id', '=', 'product_photos.product_id')
-                    ->whereRaw('product_photos.id = (SELECT MIN(id) FROM product_photos WHERE product_photos.product_id = products.id)');
-            })
-            ->join('abc_analyses', 'products.id', '=', 'abc_analyses.product_id')
+        ->leftJoin('product_categories', 'products.subjectID', '=', 'product_categories.external_cat_id')
+        ->leftJoin('product_photos', function ($join) {
+            $join->on('products.id', '=', 'product_photos.product_id')
+                ->whereRaw('product_photos.id = (SELECT MIN(id) FROM product_photos WHERE product_photos.product_id = products.id)');
+        })
+        ->join('abc_analyses', 'products.id', '=', 'abc_analyses.product_id')
             // ->orderBy('abc_analyses.created_at', 'DESC')
-            ->orderBy('abc_analyses.value', 'DESC')
-            ->get();
-
+        ->orderBy('abc_analyses.value', 'DESC')
+        ->get();
+    
+        // Получаем все ABC отчеты
         $abcData = AbcAnalysis::select('product_id', 'value', 'status', 'created_at')
             ->orderBy('created_at', 'DESC')
             ->orderBy('value', 'DESC')
             ->get();
-
+    
+        // Формируем результат
         $result = [];
         foreach ($products as $product) {
+            // Фильтруем отчеты для текущего продукта
             $productReports = $abcData->where('product_id', $product->id)->mapWithKeys(function ($report) {
                 return [$report->created_at->format('Y-m-d H:i:s') => [
                     'value' => $report->value,
                     'status' => $report->status,
                 ]];
             });
-
-            $result[] = [
+    
+            // Формируем массив данных для текущего продукта
+            $result[$product->id] = [
                 'id' => $product->id,
                 'vendorCode' => $product->vendorCode,
                 'title' => $product->title,
                 'nmID' => $product->nmID,
                 'category' => $product->category,
                 'img' => $product->img,
-                'reports' => $productReports
+                'reports' => $productReports,
+                // 'max_value' => $productReports->max('value') // добавляем максимальное значение для сортировки
             ];
         }
-
-        return $result;
+    
+        // Сортируем по максимальному значению value
+        // usort($result, function ($a, $b) {
+        //     return $b['max_value'] <=> $a['max_value'];
+        // });
+    
+        return $result; // Возвращаем массив значений
     }
-
+    
 
 
     public function generateReport()

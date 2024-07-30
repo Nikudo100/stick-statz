@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\Business\AbcReportService;
+use App\Services\Business\TurnoverReportService;
 
 class TestController extends Controller
 {
-    public function index(AbcReportService $testS)
+    public function index(TurnoverReportService $testS)
     {
         // dd($testS->generateReport()[0]);
         $testS->generateReport();

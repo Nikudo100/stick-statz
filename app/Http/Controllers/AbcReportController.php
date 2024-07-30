@@ -10,7 +10,7 @@ class AbcReportController extends Controller
     public function index(AbcReportService $AbcR){
         $data = $AbcR->get();
         // dd($data);
-        // dd($data[0]);
+        // dd(reset($data));
         return view('abc.show', ['abc' => $data]);
     }
 }

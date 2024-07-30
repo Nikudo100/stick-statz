@@ -10,7 +10,11 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
+    <style>
+        * {
+            font-family: Manrope, sans-serif;
+        }
+    </style>
     <!-- Styles -->
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
@@ -41,7 +45,7 @@
                                 <a href="{{ route('abc.index') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
                                     ABC
                                 </a>
-                                <a href="{{ route('stocks.show') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
+                                <a href="{{ route('turnover.index') }}" class="block px-3 py-2 text-black hover:bg-gray-200">
                                     Обораиваемость
                                 </a>
                                 {{-- <a href="{{ route('abc.index') }}" class="block px-4 py-2 text-black hover:bg-gray-200">
