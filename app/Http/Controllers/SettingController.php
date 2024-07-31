@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SettingRequest;
+use App\Services\Management\ClusterManager;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    function index(Request $request)
+    function index(Request $request,ClusterManager $clusterManager)
     {
         $account = $request->user()->account;
         $setting = $account->setting;
 
         if (!$setting)
             $setting = $account->setting()->create();
+
+
+        // $clusterManager->getAllClusters();
+        // dd($clusterManager->getAllClusters());
 
         return view('settings.index', compact('setting'));
     }

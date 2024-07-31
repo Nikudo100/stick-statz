@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('turnovers', function (Blueprint $table) {
             $table->decimal('value', 8, 2)->change();
-            $table->string('status')->nullable()->change();
+            $table->string('status')->change()->nullable();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('turnovers', function (Blueprint $table) {
             $table->integer('value')->change();
-            $table->string('status')->nullable(false)->change();
+            $table->string('status')->change()->nullable(false);
         });
     }
 };

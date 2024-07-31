@@ -2,6 +2,24 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-semibold">Обораиваемость</h1>
         <br>
+        <!-- Tooltip -->
+        {{-- <div class="relative flex items-center mb-4">
+            <div class="bg-black text-white text-sm rounded-lg p-2 absolute top-0 left-0 z-10">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-yellow-300 mr-2"></div>
+                    <span>Недотарили (когда меньше 30)</span>
+                </div>
+                <div class="flex items-center mt-2">
+                    <div class="w-4 h-4 bg-green-200 mr-2"></div>
+                    <span>Все в норме (когда от 30 до 60)</span>
+                </div>
+                <div class="flex items-center mt-2">
+                    <div class="w-4 h-4 bg-red-200 mr-2"></div>
+                    <span>Перетарили (когда больше 60)</span>
+                </div>
+            </div>
+        </div> --}}
+
         <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
             <table class="table-auto w-full border border-gray-200 rounded-lg shadow-sm">
                 <thead class="bg-gray-100 text-gray-600">
@@ -52,7 +70,17 @@
                                             $firstReport = false;
                                         @endphp
                                     @endif
-                                    <td class="px-4 py-2 border-b">{{ $report['value'] }}</td>
+                                    @php
+                                        $valueColor = '';
+                                        if ($report['value'] < 30) {
+                                            $valueColor = 'bg-yellow-300';
+                                        } elseif ($report['value'] >= 30 && $report['value'] <= 60) {
+                                            $valueColor = 'bg-green-200';
+                                        } else {
+                                            $valueColor = 'bg-red-200';
+                                        }
+                                    @endphp
+                                    <td class="px-4 py-2 border-b {{ $valueColor }}">{{ $report['value'] }}</td>
                                 @endforeach
                             </tr>
                         @endforeach

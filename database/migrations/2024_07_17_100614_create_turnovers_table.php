@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('turnovers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('value');
-            $table->string('status');
+            $table->integer('value')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

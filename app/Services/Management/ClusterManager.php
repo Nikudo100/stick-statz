@@ -17,4 +17,10 @@ class ClusterManager
     {
         $this->clusterService->updateOrCreateClusters($clustersData);
     }
+
+    public function getAllClusters()
+    {
+        dd($this->clusterService->getAllClusters());
+        return $this->clusterService->getAllClusters();
+    }
 }

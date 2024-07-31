@@ -68,7 +68,7 @@ class ClusterService
         LEFT JOIN total_stocks ts ON p.id = ts.product_id
         LEFT JOIN orders_30_days o ON p.id = o.product_id
         ORDER BY orders30Days DESC
-    ";
+        ";
 
         $products = DB::select($query);
 
@@ -153,4 +153,10 @@ class ClusterService
     {
         return DB::table('warehouses')->whereIn('name', $warehouseNames)->pluck('id')->toArray();
     }
+
+    public function getAllClusters()
+    {
+        return Cluster::all();
+    }
+
 }

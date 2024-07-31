@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('abc_analyses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('value');
-            $table->string('status');
+            $table->integer('value')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

@@ -39,6 +39,8 @@ class WbMain extends Command
             Artisan::call('wb:set-clusters');
             $this->info('Clusters set successfully.');
 
+            
+
             $this->info('All tasks completed successfully.');
         } else {
             $this->info('Отменено.');

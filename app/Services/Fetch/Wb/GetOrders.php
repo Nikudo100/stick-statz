@@ -22,11 +22,12 @@ class GetOrders
         ];
 
         $response = Http::withHeaders($this->headers)
-            ->timeout(240) 
-            ->retry(3, 60000) // 3 раза через минуту
+            ->timeout(120)
+            ->retry(4, 60000) // 3 раза через минуту
             ->get($url, $params);
 
         if ($response->successful()) {
+            echo 'fetching done';
             return $response->json();
         }
 
