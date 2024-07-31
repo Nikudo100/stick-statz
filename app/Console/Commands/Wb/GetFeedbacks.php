@@ -5,7 +5,7 @@ namespace App\Console\Commands\Wb;
 use App\Services\Management\FeedbackManager;
 use Illuminate\Console\Command;
 
-class GetStocks extends Command
+class GetFeedbacks extends Command
 {
     protected $signature = 'wb:get-feedbacks';
     protected $description = 'Get feedbaks from Wildberries and save to database';
