@@ -10,9 +10,9 @@ class CreateTurnoverReport extends Command
     protected $signature = 'wb:create-turnover-report';
     protected $description = 'Generate ABC Analysis Report';
 
-    public function handle(TurnoverReportService $AbcReportService)
+    public function handle(TurnoverReportService $turnoverReportService)
     {
-        $AbcReportService->generateReport();
+        $turnoverReportService->generateReport();
         $this->info('ABC Analysis Report generated successfully.');
     }
 }

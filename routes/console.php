@@ -8,14 +8,27 @@ use App\Models\CommandLog;
 
 $now = Carbon::now()->startOfDay()->format('Y-m-d');
 
-// Schedule your commands
+// Команды в кроне
 app()->booted(function () use ($now) {
     $schedule = app(Schedule::class);
+    // Команда собирающия продукты каждый час
     scheduleCommand($schedule, 'wb:get-products')->hourly();
+    // Команда собирающия остатки каждый час
     scheduleCommand($schedule, 'wb:get-stocks')->hourly();
+    // Команда собирающия закзазы за сегодня каждый час
     scheduleCommand($schedule, "wb:get-orders {$now} 1")->hourly();
-    // scheduleCommand($schedule, 'app:test')->everyMinute();
-    // scheduleCommand($schedule, 'wb:create-abc-report')->everyMinute();
+    // Команда собирающия отзывы каждый час
+    scheduleCommand($schedule, "wb:get-feedbacks")->hourly();
+
+    // Команда собирающия заказы за последние 33 дня от каждого дня (использует Jobs) время выполнения ~33минут
+    scheduleCommand($schedule, 'wb:get-orders-last-month')->monthly();
+    // Команда собирающия заказы за последние 33 дня по дате последнего изменения заказов
+    scheduleCommand($schedule, 'wb:get-orders')->monthlyOn(1, '01:00');
+
+    // Команда генерирует отчет АBC в Понедельник 00:00
+    scheduleCommand($schedule, 'wb:create-abc-report')->weeklyOn(1, '00:00');
+    // Команда генерирует отчет Оборачиваемость  в Понедельник 00:00
+    scheduleCommand($schedule, 'wb:create-turnover-report')->weeklyOn(1, '00:00');
 });
 
 
