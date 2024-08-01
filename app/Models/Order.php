@@ -38,6 +38,7 @@ class Order extends Model
         'srid',
         'product_id',
         'warehouse_id',
+        'region_id',
         'date',
         'lastChangeDate'
     ];
@@ -50,5 +51,10 @@ class Order extends Model
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
     }
 }

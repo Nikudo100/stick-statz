@@ -20,7 +20,12 @@ class ClusterManager
 
     public function getAllClusters()
     {
-        dd($this->clusterService->getAllClusters());
+        // dd($this->clusterService->getAllClusters());
         return $this->clusterService->getAllClusters();
+    }
+
+    public function saveCluster($data)
+    {
+        $this->clusterService->saveCluster($data);
     }
 }

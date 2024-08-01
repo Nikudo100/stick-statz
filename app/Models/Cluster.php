@@ -15,4 +15,16 @@ class Cluster extends Model
         'warehouse_ids' => 'array',
         'order_region_names' => 'array',
     ];
+
+        // Связь с регионами
+        public function regions()
+        {
+            return $this->hasMany(Region::class);
+        }
+    
+        // Связь со складами
+        public function warehouses()
+        {
+            return $this->hasMany(Warehouse::class);
+        }
 }
