@@ -28,4 +28,14 @@ class ClusterManager
     {
         $this->clusterService->saveCluster($data);
     }
+
+    public function removeRegionsAndWarehouses($data)
+    {
+        $this->clusterService->removeRegionsAndWarehouses($data);
+    }
+
+    public function deleteCluster($data)
+    {
+        $this->clusterService->deleteCluster($data);
+    }
 }

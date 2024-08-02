@@ -12,7 +12,7 @@ class WbMain extends Command
 
     public function handle()
     {
-        if ($this->confirm('Вы уверены, что хотите запустить wb:main? Команда перезапустит все миграции вы потеряете все данные!')) 
+        if ($this->confirm('Вы уверены, что хотите запустить wb:main? Команда перезапустит все миграции вы потеряете все данные!'))
         {
             $this->info('Rolling back all migrations and reseeding the database...');
             Artisan::call('migrate:fresh --seed');
@@ -39,7 +39,9 @@ class WbMain extends Command
             Artisan::call('wb:set-clusters');
             $this->info('Clusters set successfully.');
 
-            
+            $this->info('Setting clusters...');
+            Artisan::call('wb:get-feedbacks');
+            $this->info('Clusters set successfully.');
 
             $this->info('All tasks completed successfully.');
         } else {

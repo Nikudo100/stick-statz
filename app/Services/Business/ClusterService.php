@@ -324,16 +324,6 @@ class ClusterService
 
             Log::info('Cluster saved', ['cluster' => $cluster]);
 
-            if (isset($data['remove_order_region_ids']) && !empty($data['remove_order_region_ids'])) {
-                Region::whereIn('id', $data['remove_order_region_ids'])->where('cluster_id', $cluster->id)->update(['cluster_id' => null]);
-                Log::info('Regions removed', ['region_ids' => $data['remove_order_region_ids']]);
-            }
-
-            if (isset($data['remove_warehouse_ids']) && !empty($data['remove_warehouse_ids'])) {
-                Warehouse::whereIn('id', $data['remove_warehouse_ids'])->where('cluster_id', $cluster->id)->update(['cluster_id' => null]);
-                Log::info('Warehouses removed', ['warehouse_ids' => $data['remove_warehouse_ids']]);
-            }
-
             if (isset($data['order_region_ids']) && !empty($data['order_region_ids'])) {
                 Region::whereIn('id', $data['order_region_ids'])->update(['cluster_id' => $cluster->id]);
                 Log::info('Regions updated', ['region_ids' => $data['order_region_ids']]);
@@ -343,6 +333,37 @@ class ClusterService
                 Warehouse::whereIn('id', $data['warehouse_ids'])->update(['cluster_id' => $cluster->id]);
                 Log::info('Warehouses updated', ['warehouse_ids' => $data['warehouse_ids']]);
             }
+        });
+    }
+
+    public function removeRegionsAndWarehouses($data)
+    {
+        DB::transaction(function () use ($data) {
+            if (isset($data['remove_order_region_ids']) && !empty($data['remove_order_region_ids'])) {
+                Region::whereIn('id', $data['remove_order_region_ids'])->update(['cluster_id' => null]);
+                Log::info('Regions removed', ['region_ids' => $data['remove_order_region_ids']]);
+            }
+
+            if (isset($data['remove_warehouse_ids']) && !empty($data['remove_warehouse_ids'])) {
+                Warehouse::whereIn('id', $data['remove_warehouse_ids'])->update(['cluster_id' => null]);
+                Log::info('Warehouses removed', ['warehouse_ids' => $data['remove_warehouse_ids']]);
+            }
+        });
+    }
+
+    public function deleteCluster($clusterId)
+    {
+        Log::info('Attempting to delete cluster', ['cluster_id' => $clusterId]);
+
+        DB::transaction(function () use ($clusterId) {
+            $cluster = Cluster::findOrFail($clusterId);
+
+            Region::where('cluster_id', $clusterId)->update(['cluster_id' => null]);
+            Warehouse::where('cluster_id', $clusterId)->update(['cluster_id' => null]);
+
+            $cluster->delete();
+
+            Log::info('Cluster deleted', ['cluster_id' => $clusterId]);
         });
     }
 }

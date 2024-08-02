@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ClusterController::class, 'index'])->name('main');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function ()
+{
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -27,7 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/turnover', [TurnoverReportController::class, 'index'])->name('turnover.index');
 
     Route::get('/stocks', [StockController::class, 'show'])->name('stocks.show');
-
     Route::get('/feedbacks', [FeedbackController::class, 'index'])->name('feedbacks.index');
     Route::put('/feedbacks/{feedback}', [FeedbackController::class, 'update'])->name('feedbacks.update');
     Route::put('/feedbacks/{feedback}/auto-answer', [FeedbackController::class, 'autoAnswer'])->name('feedbacks.autoAnswer');
@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('/settings', [SettingController::class, 'updateClusters'])->name('settings.updateClusters');
+    Route::post('/settings/remove-regions-warehouses', [SettingController::class, 'removeRegionsAndWarehouses'])->name('settings.removeRegionsAndWarehouses');
+    Route::delete('/settings/{id}', [SettingController::class, 'deleteCluster'])->name('settings.deleteCluster');
 
 });
 

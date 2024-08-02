@@ -128,7 +128,7 @@
                                                     </div>
                                                     <x-primary-button> Сохранить</x-primary-button>
                                                 </form>
-                                                <form method="post" action="{{ route('settings.updateClusters') }}" class="mt-6 space-y-6">
+                                                <form method="post" action="{{ route('settings.removeRegionsAndWarehouses') }}" class="mt-6 space-y-6">
                                                     @csrf
                                                     <input type="hidden" name="cluster_id" value="{{ $cluster->id }}">
                                                     <div>
@@ -154,6 +154,11 @@
                                                         </div>
                                                     </div>
                                                     <x-danger-button>Удалить выбранное</x-danger-button>
+                                                </form>
+                                                <form method="post" action="{{ route('settings.deleteCluster', $cluster->id) }}" class="mt-6 space-y-6">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <x-danger-button>Удалить кластер</x-danger-button>
                                                 </form>
                                             </div>
                                         </div>

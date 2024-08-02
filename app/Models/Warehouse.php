@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name','cluster_id'];
+
+    public function cluster()
+    {
+        return $this->belongsTo(Cluster::class);
+    }
 }

@@ -38,10 +38,6 @@ class SettingController extends Controller
             'warehouse_ids.*' => 'integer|exists:warehouses,id',
             'order_region_ids' => 'array',
             'order_region_ids.*' => 'integer|exists:regions,id',
-            'remove_warehouse_ids' => 'array',
-            'remove_warehouse_ids.*' => 'integer|exists:warehouses,id',
-            'remove_order_region_ids' => 'array',
-            'remove_order_region_ids.*' => 'integer|exists:regions,id',
         ]);
 
         Log::info('Received data for updating clusters', $data);
@@ -49,6 +45,23 @@ class SettingController extends Controller
         $clusterManager->saveCluster($data);
 
         return redirect()->route('settings.index')->with('success', 'Кластер обновлен успешно.');
+    }
+
+    public function removeRegionsAndWarehouses(Request $request, ClusterManager $clusterManager)
+    {
+        $data = $request->validate([
+            'cluster_id' => 'required|integer|exists:clusters,id',
+            'remove_warehouse_ids' => 'array',
+            'remove_warehouse_ids.*' => 'integer|exists:warehouses,id',
+            'remove_order_region_ids' => 'array',
+            'remove_order_region_ids.*' => 'integer|exists:regions,id',
+        ]);
+
+        Log::info('Received data for removing regions and warehouses', $data);
+
+        $clusterManager->removeRegionsAndWarehouses($data);
+
+        return redirect()->route('settings.index')->with('success', 'Регионы и склады успешно удалены.');
     }
 
     function update(SettingRequest $request)
@@ -65,5 +78,13 @@ class SettingController extends Controller
         }
 
         return redirect()->back();
+    }
+
+
+    public function deleteCluster($id, ClusterManager $clusterManager)
+    {
+        $clusterManager->deleteCluster($id);
+
+        return redirect()->route('settings.index')->with('success', 'Кластер удален успешно.');
     }
 }
